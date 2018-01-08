@@ -1,0 +1,19 @@
+version: 2
+
+jobs:
+  build:
+
+    docker:
+        - image: gcc:5.4.0 
+
+    steps:
+
+      - checkout
+
+      - run:
+          name: update common repo
+          command: git submodule update --init
+
+      - run: apt update
+      - run: make release
+      - run: make
