@@ -13,7 +13,6 @@ jobs:
       - run:
           name: update common repo
           command: git submodule update --init
-
       - run: apt update
       - run: make release
       - run: make
