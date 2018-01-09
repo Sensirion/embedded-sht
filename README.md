@@ -30,6 +30,6 @@ and depending on your i2c implementation one of the following:
 
 ---
 
-Please check the [embedded-common](https://github.com/Sensirion/embedded-common) repository for further information.
+Please check the [embedded-common](https://github.com/Sensirion/embedded-common) repository for further information and sample implementations.
 
 ---
