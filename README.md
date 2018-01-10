@@ -1,4 +1,5 @@
-# embedded-sht Embedded SHT Drivers
+# embedded-sht
+Embedded SHT Drivers
 
 ## Clone this repository
 ```
@@ -11,8 +12,8 @@
 * *.h files (headers to build both sht3x and shtc1 drivers)
 * *.py (helpers to restructure some files before release)
 
-## Files to adjust (from embedded-common) You only need to touch the following
-files:
+## Files to adjust (from embedded-common)
+You only need to touch the following files:
 
 * `sensirion_arch_config.h` (architecture specifics, you need to specify the 
 integer sizes)
