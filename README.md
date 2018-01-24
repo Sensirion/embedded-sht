@@ -7,7 +7,7 @@ SHT product line.
  git clone --recursive https://github.com/Sensirion/embedded-sht.git
 ```
 
-## Repistory content
+## Repository content
 * embedded-common (submodule repository for common embedded driver stuff)
 * *.c files (sources to build both SHT3x and SHTC1 drivers)
 * *.h files (headers to build both SHT3x and SHTC1 drivers)
