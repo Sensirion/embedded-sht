@@ -9,9 +9,9 @@ SHT product line.
 
 ## Repository content
 * embedded-common (submodule repository for common embedded driver stuff)
-* *.c files (sources to build both SHT3x and SHTC1 drivers)
-* *.h files (headers to build both SHT3x and SHTC1 drivers)
-* *.py (helpers to restructure some files before release)
+* `*.c` files (sources to build both SHT3x and SHTC1 drivers)
+* `*.h` files (headers to build both SHT3x and SHTC1 drivers)
+* `*.py` (helpers to restructure some files before release)
 
 ## Files to adjust (from embedded-common)
 You only need to touch the following files:
