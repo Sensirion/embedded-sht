@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-(c) Copyright 2017, Sensirion AG, Switzerland
+(c) Copyright 2018, Sensirion AG, Switzerland
 """
 import re
 
