@@ -1,7 +1,7 @@
 *.o
-example_usage_sht3x_hw
-example_usage_sht3x_sw
-example_usage_shtc1_hw
-example_usage_shtc1_sw
-/release
 *.pyc
+/example_usage_sht3x_hw
+/example_usage_sht3x_sw
+/example_usage_shtc1_hw
+/example_usage_shtc1_sw
+/release
