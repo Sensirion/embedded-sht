@@ -41,6 +41,7 @@
 #define SHT_H
 
 #include "sensirion_arch_config.h"
+#include "git_version.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -95,15 +96,18 @@ int8_t sht_measure(void);
  */
 int8_t sht_read(int32_t *temperature, int32_t *humidity);
 
-#ifndef SHT_GET_ADDR
-#define SHT_GET_ADDR
+/**
+ * sht_get_driver_version() - Return the driver version
+ * Return:  Driver version string
+ */
+const char *sht_get_driver_version(void);
+
 /**
  * Returns the configured SHTxx address.
  *
  * @return SHTxx_ADDRESS
  */
 uint8_t sht_get_configured_sht_address(void);
-#endif /* SHT_GET_ADDR */
 
 #ifdef __cplusplus
 }

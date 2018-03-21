@@ -96,6 +96,11 @@ s8 sht_probe()
     return STATUS_OK;
 }
 
+const char *sht_get_driver_version()
+{
+    return SHT_DRV_VERSION_STR;
+}
+
 u8 sht_get_configured_sht_address()
 {
     return SHT3X_ADDRESS;

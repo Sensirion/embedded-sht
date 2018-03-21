@@ -23,7 +23,7 @@ SLA_HEADER_PATH = 'licences/sla_copyright.txt'
 class SHTDriverRelease(object):
 
     def __init__(self):
-        self.copy_files = []
+        self.copy_files = ['git_version.h', 'git_version.c']
         self.example_source_files = ['example_usage.c']
         self.driver_header = 'sht.h'
         self.sensirion_configuration_header = 'embedded-common/sensirion_arch_config.h'
