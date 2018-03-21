@@ -6,7 +6,8 @@ sw_objects := ${sensirion_common_dir}/sw_i2c/sensirion_sw_i2c.o ${sensirion_comm
 hw_objects := ${sensirion_common_dir}/hw_i2c/sensirion_hw_i2c_implementation.o
 all_objects := ${common_objects} ${hw_objects} ${sw_objects} shtc1.o sht3x.o
 
-binaries := example_usage_shtc1_sw example_usage_shtc1_hw example_usage_sht3x_sw example_usage_sht3x_hw
+binaries := example_usage_shtc1_sw example_usage_shtc1_hw \
+            example_usage_sht3x_sw example_usage_sht3x_hw
 
 .PHONY: release
 
@@ -45,4 +46,4 @@ release:
 	done
 
 clean:
-	rm -rf ${all_objects} ${binaries} release
+	rm -rf ${all_objects} ${binaries} release.pyc release
