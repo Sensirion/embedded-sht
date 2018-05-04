@@ -4,7 +4,7 @@ jobs:
   build:
 
     docker:
-        - image: gcc:5.4.0 
+        - image: gcc:5.4.0
 
     steps:
 
@@ -14,5 +14,11 @@ jobs:
           name: update common repo
           command: git submodule update --init
       - run: apt update
+      - run: apt install -y zip
       - run: make release
       - run: make
+      - run:
+          name: make driver
+          command: |
+              cd release/sht3x && make && make clean && cd -
+              cd release/shtc1 && make && make clean && cd -
