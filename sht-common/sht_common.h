@@ -37,10 +37,6 @@
 extern "C" {
 #endif
 
-uint8_t sht_common_generate_crc(uint8_t *data, uint16_t count);
-
-int8_t sht_common_check_crc(uint8_t *data, uint16_t count, uint8_t checksum);
-
 int8_t sht_common_read_ticks(uint8_t address, int32_t *temperature_ticks, int32_t *humidity_ticks);
 
 int8_t sht_common_read_measurement(uint8_t address, int32_t *temperature, int32_t *humidity);
