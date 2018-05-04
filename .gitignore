@@ -1,8 +1,7 @@
 *.o
-*.pyc
-/example_usage_sht3x_hw
-/example_usage_sht3x_sw
-/example_usage_shtc1_hw
-/example_usage_shtc1_sw
 /release
-/git_version.c
+/sht3x/sht3x_example_usage_hw_i2c
+/sht3x/sht3x_example_usage_sw_i2c
+/shtc1/shtc1_example_usage_hw_i2c
+/shtc1/shtc1_example_usage_sw_i2c
+/sht-common/git_version.c
