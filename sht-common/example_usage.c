@@ -49,11 +49,11 @@ int main(void)
     /* printf("SHT sensor probing successful\n"); */
 
     while (1) {
-        int32_t temperature, humidity;
+        s32 temperature, humidity;
         /* Measure temperature and relative humidity and store into variables
          * temperature, humidity (each output multiplied by 1000).
          */
-        int8_t ret = sht_measure_blocking_read(&temperature, &humidity);
+        s8 ret = sht_measure_blocking_read(&temperature, &humidity);
         if (ret == STATUS_OK) {
             /* printf("measured temperature: %0.2f degreeCelsius, "
                       "measured humidity: %0.2f percentRH\n",

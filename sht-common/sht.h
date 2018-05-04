@@ -59,7 +59,7 @@ extern "C" {
  *
  * @return 0 if a sensor was detected
  */
-int8_t sht_probe(void);
+s8 sht_probe(void);
 
 /**
  * Starts a measurement and then reads out the results. This function blocks
@@ -72,7 +72,7 @@ int8_t sht_probe(void);
  * @param humidity      the address for the result of the relative humidity measurement
  * @return              0 if the command was successful, else an error code.
  */
-int8_t sht_measure_blocking_read(int32_t *temperature, int32_t *humidity);
+s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity);
 
 /**
  * Starts a measurement in high precision mode. Use sht_read() to read out the values,
@@ -81,7 +81,7 @@ int8_t sht_measure_blocking_read(int32_t *temperature, int32_t *humidity);
  *
  * @return     0 if the command was successful, else an error code.
  */
-int8_t sht_measure(void);
+s8 sht_measure(void);
 
 /**
  * Reads out the results of a measurement that was previously started by
@@ -94,7 +94,7 @@ int8_t sht_measure(void);
  * @param humidity      the address for the result of the relative humidity measurement
  * @return              0 if the command was successful, else an error code.
  */
-int8_t sht_read(int32_t *temperature, int32_t *humidity);
+s8 sht_read(s32 *temperature, s32 *humidity);
 
 /**
  * sht_get_driver_version() - Return the driver version
@@ -107,7 +107,7 @@ const char *sht_get_driver_version(void);
  *
  * @return SHTxx_ADDRESS
  */
-uint8_t sht_get_configured_sht_address(void);
+u8 sht_get_configured_sht_address(void);
 
 #ifdef __cplusplus
 }

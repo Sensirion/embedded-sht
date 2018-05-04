@@ -34,15 +34,16 @@
  * This module provides functionality that is common to all SHT drivers
  */
 
+#include "sensirion_arch_config.h"
 #include "sht_common.h"
 #include "sht.h"
 #include "sensirion_common.h"
 #include "sensirion_i2c.h"
 
-int8_t sht_common_read_ticks(uint8_t address, int32_t *temperature_ticks, int32_t *humidity_ticks)
+s8 sht_common_read_ticks(u8 address, s32 *temperature_ticks, s32 *humidity_ticks)
 {
-    uint8_t data[6];
-    int8_t ret = sensirion_i2c_read(address, data, sizeof(data));
+    u8 data[6];
+    s8 ret = sensirion_i2c_read(address, data, sizeof(data));
     if (ret)
         return ret;
     if (sensirion_common_check_crc(data, 2, data[2]) ||
@@ -50,15 +51,15 @@ int8_t sht_common_read_ticks(uint8_t address, int32_t *temperature_ticks, int32_
         return STATUS_CRC_FAIL;
     }
 
-    *temperature_ticks = (data[1] & 0xff) | ((int32_t)data[0] << 8);
-    *humidity_ticks = (data[4] & 0xff) | ((int32_t)data[3] << 8);
+    *temperature_ticks = (data[1] & 0xff) | ((s32)data[0] << 8);
+    *humidity_ticks = (data[4] & 0xff) | ((s32)data[3] << 8);
 
     return STATUS_OK;
 }
 
-int8_t sht_common_read_measurement(uint8_t address, int32_t *temperature, int32_t *humidity)
+s8 sht_common_read_measurement(u8 address, s32 *temperature, s32 *humidity)
 {
-    int8_t ret = sht_common_read_ticks(address, temperature, humidity);
+    s8 ret = sht_common_read_ticks(address, temperature, humidity);
      /**
      * formulas for conversion of the sensor signals, optimized for fixed point algebra:
      * Temperature       = 175 * S_T / 2^16 - 45
