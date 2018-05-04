@@ -36,36 +36,8 @@
 
 #include "sht_common.h"
 #include "sht.h"
+#include "sensirion_common.h"
 #include "sensirion_i2c.h"
-
-static const uint8_t CRC_POLYNOMIAL    = 0x31;
-static const uint8_t CRC_INIT          = 0xff;
-
-uint8_t sht_common_generate_crc(uint8_t *data, uint16_t count)
-{
-    uint8_t crc = CRC_INIT;
-    uint8_t current_byte;
-    uint8_t crc_bit;
-
-    /* calculates 8-Bit checksum with given polynomial */
-    for (current_byte = 0; current_byte < count; ++current_byte) {
-        crc ^= (data[current_byte]);
-        for (crc_bit = 8; crc_bit > 0; --crc_bit) {
-            if (crc & 0x80)
-                crc = (crc << 1) ^ CRC_POLYNOMIAL;
-            else
-                crc = (crc << 1);
-        }
-    }
-    return crc;
-}
-
-int8_t sht_common_check_crc(uint8_t *data, uint16_t count, uint8_t checksum)
-{
-    if (sht_common_generate_crc(data, count) != checksum)
-        return STATUS_CRC_FAIL;
-    return STATUS_OK;
-}
 
 int8_t sht_common_read_ticks(uint8_t address, int32_t *temperature_ticks, int32_t *humidity_ticks)
 {
@@ -73,8 +45,10 @@ int8_t sht_common_read_ticks(uint8_t address, int32_t *temperature_ticks, int32_
     int8_t ret = sensirion_i2c_read(address, data, sizeof(data));
     if (ret)
         return ret;
-    if (sht_common_check_crc(data, 2, data[2]) || sht_common_check_crc(data + 3, 2, data[5]))
+    if (sensirion_common_check_crc(data, 2, data[2]) ||
+            sensirion_common_check_crc(data + 3, 2, data[5])) {
         return STATUS_CRC_FAIL;
+    }
 
     *temperature_ticks = (data[1] & 0xff) | ((int32_t)data[0] << 8);
     *humidity_ticks = (data[4] & 0xff) | ((int32_t)data[3] << 8);

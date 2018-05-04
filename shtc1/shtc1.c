@@ -38,6 +38,7 @@
  */
 
 #include "sensirion_arch_config.h"
+#include "sensirion_common.h"
 #include "sensirion_i2c.h"
 #include "sht.h"
 #include "sht_common.h"
@@ -93,7 +94,7 @@ s8 sht_probe()
     if (ret)
         return ret;
 
-    ret = sht_common_check_crc(data, 2, data[2]);
+    ret = sensirion_common_check_crc(data, 2, data[2]);
     if (ret)
         return ret;
 
