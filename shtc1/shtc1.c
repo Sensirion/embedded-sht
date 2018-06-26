@@ -31,10 +31,12 @@
 /**
  * \file
  *
- * \brief Sensirion SHTC1 driver implementation
+ * \brief Sensirion SHTC1 (and compatible) driver implementation
  *
  * This module provides access to the SHTC1 functionality over a generic I2C
  * interface. It supports measurements without clock stretching only.
+ *
+ * SHTC1 compatible sensors: SHTW1, SHTW2, SHTC3
  */
 
 #include "sensirion_arch_config.h"
@@ -60,8 +62,10 @@ static const u8 SHTC1_ADDRESS = SHT_ADDRESS;
 static const u8 SHTC1_ADDRESS = 0x70;
 #endif
 
-static const u8 ID_REG_CONTENT    = 0x07;
-static const u8 ID_REG_MASK       = 0x1f;
+static const u16 SHTC1_PRODUCT_CODE_MASK    = 0x001F;
+static const u16 SHTC1_PRODUCT_CODE         = 0x0007;
+static const u16 SHTC3_PRODUCT_CODE_MASK    = 0x083F;
+static const u16 SHTC3_PRODUCT_CODE         = 0x0807;
 
 static const u8 *cmd_measure = CMD_MEASURE_HPM;
 
@@ -90,6 +94,8 @@ s8 sht_read(s32 *temperature, s32 *humidity)
 s8 sht_probe()
 {
     u8 data[3];
+    u16 id;
+
     sensirion_i2c_init();
     s8 ret = sensirion_i2c_write(SHTC1_ADDRESS, CMD_READ_ID_REG, COMMAND_SIZE);
     if (ret)
@@ -103,9 +109,15 @@ s8 sht_probe()
     if (ret)
         return ret;
 
-    if ((data[1] & ID_REG_MASK) != ID_REG_CONTENT)
-        return STATUS_UNKNOWN_DEVICE;
-    return STATUS_OK;
+    id = ((u16)data[0] << 8) | data[1];
+    if ((id & SHTC3_PRODUCT_CODE_MASK) == SHTC3_PRODUCT_CODE) {
+        return STATUS_OK;
+    }
+
+    if ((id & SHTC1_PRODUCT_CODE_MASK) == SHTC1_PRODUCT_CODE)
+        return STATUS_OK;
+
+    return STATUS_UNKNOWN_DEVICE;
 }
 
 void sht_enable_low_power_mode(u8 enable_low_power_mode)
