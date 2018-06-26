@@ -46,8 +46,10 @@
 /* all measurement commands return T (CRC) RH (CRC) */
 #if USE_SENSIRION_CLOCK_STRETCHING
 static const u8 CMD_MEASURE_HPM[]     = { 0x7C, 0xA2 };
+static const u8 CMD_MEASURE_LPM[]     = { 0x64, 0x58 };
 #else
 static const u8 CMD_MEASURE_HPM[]     = { 0x78, 0x66 };
+static const u8 CMD_MEASURE_LPM[]     = { 0x60, 0x9C };
 static const u16 MEASUREMENT_DURATION_USEC = 14400;
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
 static const u8 CMD_READ_ID_REG[]     = { 0xef, 0xc8 };
@@ -60,6 +62,8 @@ static const u8 SHTC1_ADDRESS = 0x70;
 
 static const u8 ID_REG_CONTENT    = 0x07;
 static const u8 ID_REG_MASK       = 0x1f;
+
+static const u8 *cmd_measure = CMD_MEASURE_HPM;
 
 s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity)
 {
@@ -102,6 +106,11 @@ s8 sht_probe()
     if ((data[1] & ID_REG_MASK) != ID_REG_CONTENT)
         return STATUS_UNKNOWN_DEVICE;
     return STATUS_OK;
+}
+
+void sht_enable_low_power_mode(u8 enable_low_power_mode)
+{
+    cmd_measure = enable_low_power_mode ? CMD_MEASURE_LPM : CMD_MEASURE_HPM;
 }
 
 const char *sht_get_driver_version()

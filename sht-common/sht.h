@@ -97,6 +97,13 @@ s8 sht_measure(void);
 s8 sht_read(s32 *temperature, s32 *humidity);
 
 /**
+ * Enable or disable the SHT's low power mode
+ *
+ * @param enable_low_power_mode 1 to enable low power mode, 0 to disable
+ */
+void sht_enable_low_power_mode(u8 enable_low_power_mode);
+
+/**
  * sht_get_driver_version() - Return the driver version
  *
  * @return Driver version string
