@@ -101,6 +101,11 @@ s8 sht_probe()
     return STATUS_OK;
 }
 
+s8 sht_disable_sleep(u8 disable_sleep)
+{
+    return STATUS_FAIL; /* sleep mode not supported */
+}
+
 void sht_enable_low_power_mode(u8 enable_low_power_mode)
 {
     cmd_measure = enable_low_power_mode ? CMD_MEASURE_LPM : CMD_MEASURE_HPM;

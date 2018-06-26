@@ -97,6 +97,17 @@ s8 sht_measure(void);
 s8 sht_read(s32 *temperature, s32 *humidity);
 
 /**
+ * Enable or disable the SHT's sleep mode between measurements, if supported.
+ * Sleep mode is enabled by default when supported.
+ *
+ * @param disable_sleep 1 (or anything other than 0) to disable sleeping between
+ *                      measurements, 0 to enable sleeping.
+ * @return              0 if the command was successful,
+ *                      1 if an error occured or if sleep mode is not supported
+ */
+s8 sht_disable_sleep(u8 disable_sleep);
+
+/**
  * Enable or disable the SHT's low power mode
  *
  * @param enable_low_power_mode 1 to enable low power mode, 0 to disable
