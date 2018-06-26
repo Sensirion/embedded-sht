@@ -48,6 +48,7 @@
 static const u8 CMD_MEASURE_HPM[]     = { 0x7C, 0xA2 };
 #else
 static const u8 CMD_MEASURE_HPM[]     = { 0x78, 0x66 };
+static const u16 MEASUREMENT_DURATION_USEC = 14400;
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
 static const u8 CMD_READ_ID_REG[]     = { 0xef, 0xc8 };
 static const u8 COMMAND_SIZE = sizeof(CMD_MEASURE_HPM);
@@ -60,13 +61,13 @@ static const u8 SHTC1_ADDRESS = 0x70;
 static const u8 ID_REG_CONTENT    = 0x07;
 static const u8 ID_REG_MASK       = 0x1f;
 
-static const u16 MEASUREMENT_DURATION_USEC = 14400;
-
 s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity)
 {
     s8 ret = sht_measure();
     if (ret == STATUS_OK) {
+#if !defined(USE_SENSIRION_CLOCK_STRETCHING) || !USE_SENSIRION_CLOCK_STRETCHING
         sensirion_sleep_usec(MEASUREMENT_DURATION_USEC);
+#endif /* USE_SENSIRION_CLOCK_STRETCHING */
         ret = sht_read(temperature, humidity);
     }
     return ret;
