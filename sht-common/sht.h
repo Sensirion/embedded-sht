@@ -98,7 +98,8 @@ s8 sht_read(s32 *temperature, s32 *humidity);
 
 /**
  * sht_get_driver_version() - Return the driver version
- * Return:  Driver version string
+ *
+ * @return Driver version string
  */
 const char *sht_get_driver_version(void);
 
