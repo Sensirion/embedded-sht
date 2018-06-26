@@ -56,6 +56,9 @@ static const u16 MEASUREMENT_DURATION_USEC = 14400;
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
 static const u8 CMD_READ_ID_REG[]     = { 0xef, 0xc8 };
 static const u8 COMMAND_SIZE = sizeof(CMD_MEASURE_HPM);
+
+static const u8 SHTC3_CMD_SLEEP[]     = { 0xB0, 0x98 };
+static const u8 SHTC3_CMD_WAKEUP[]    = { 0x35, 0x17 };
 #ifdef SHT_ADDRESS
 static const u8 SHTC1_ADDRESS = SHT_ADDRESS;
 #else
@@ -69,26 +72,78 @@ static const u16 SHTC3_PRODUCT_CODE         = 0x0807;
 
 static const u8 *cmd_measure = CMD_MEASURE_HPM;
 
+/**
+ * PM_SLEEP is equivalent to
+ * if (ret) {
+ *     (void)sht_sleep(); // attempting to sleep but ignore return value
+ * } else {
+ *     (ret) = sht_sleep();
+ * }, (ret)
+ */
+#define PM_SLEEP(ret) ((ret) ? (sht_sleep(), (ret)) : ((ret) = sht_sleep()))
+
+/**
+ * PM_WAKE is equivalent to
+ * (ret) = sht_wakeup();
+ * if (ret)
+ *     (void)sht_sleep(); // attempting to sleep but ignore return value
+ * else {
+ *     (ret) = (cmd);
+ *     if (!(ret))
+ *          sht_sleep(); // attempting to sleep but ignore return value
+ * }, (ret)
+ */
+#define PM_WAKE(ret, cmd) (         \
+    ((ret) = sht_wakeup()) ?        \
+        (sht_sleep(), (ret)) :      \
+        ((ret) = (cmd) ?            \
+            sht_sleep(), (ret) :    \
+            (ret)))
+
+static u8 supports_sleep = 1;
+static u8 sleep_enabled = 1;
+
+static u8 sht_sleep()
+{
+    if (!supports_sleep || !sleep_enabled)
+        return STATUS_OK;
+
+    return sensirion_i2c_write(SHTC1_ADDRESS, SHTC3_CMD_SLEEP, COMMAND_SIZE);
+}
+
+static u8 sht_wakeup()
+{
+    if (!supports_sleep || !sleep_enabled)
+        return STATUS_OK;
+
+    return sensirion_i2c_write(SHTC1_ADDRESS, SHTC3_CMD_WAKEUP, COMMAND_SIZE);
+}
+
 s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity)
 {
-    s8 ret = sht_measure();
-    if (ret == STATUS_OK) {
+    s8 ret;
+
+    PM_WAKE(ret, sht_measure());
 #if !defined(USE_SENSIRION_CLOCK_STRETCHING) || !USE_SENSIRION_CLOCK_STRETCHING
-        sensirion_sleep_usec(MEASUREMENT_DURATION_USEC);
+    sensirion_sleep_usec(MEASUREMENT_DURATION_USEC);
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
-        ret = sht_read(temperature, humidity);
-    }
-    return ret;
+    ret = sht_read(temperature, humidity);
+    return PM_SLEEP(ret);
 }
 
 s8 sht_measure()
 {
-    return sensirion_i2c_write(SHTC1_ADDRESS, CMD_MEASURE_HPM, COMMAND_SIZE);
+    s8 ret;
+
+    return PM_WAKE(ret, sensirion_i2c_write(SHTC1_ADDRESS, cmd_measure,
+                                            COMMAND_SIZE));
 }
 
 s8 sht_read(s32 *temperature, s32 *humidity)
 {
-    return sht_common_read_measurement(SHTC1_ADDRESS, temperature, humidity);
+    s8 ret = sht_common_read_measurement(SHTC1_ADDRESS, temperature, humidity);
+
+    return PM_SLEEP(ret);
 }
 
 s8 sht_probe()
@@ -111,13 +166,29 @@ s8 sht_probe()
 
     id = ((u16)data[0] << 8) | data[1];
     if ((id & SHTC3_PRODUCT_CODE_MASK) == SHTC3_PRODUCT_CODE) {
+        supports_sleep = 1;
+        return sht_sleep();
+    }
+
+    if ((id & SHTC1_PRODUCT_CODE_MASK) == SHTC1_PRODUCT_CODE) {
+        supports_sleep = 0;
         return STATUS_OK;
     }
 
-    if ((id & SHTC1_PRODUCT_CODE_MASK) == SHTC1_PRODUCT_CODE)
-        return STATUS_OK;
-
     return STATUS_UNKNOWN_DEVICE;
+}
+
+s8 sht_disable_sleep(u8 disable_sleep)
+{
+    if (!supports_sleep)
+        return STATUS_FAIL;
+
+    sleep_enabled = !disable_sleep;
+
+    if (disable_sleep)
+        return sht_wakeup();
+
+    return sht_sleep();
 }
 
 void sht_enable_low_power_mode(u8 enable_low_power_mode)
