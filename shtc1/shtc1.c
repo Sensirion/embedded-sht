@@ -44,11 +44,7 @@
 #include "sht_common.h"
 
 /* all measurement commands return T (CRC) RH (CRC) */
-#if USE_SENSIRION_CLOCK_STRETCHING
-static const u8 CMD_MEASURE_HPM[]     = { 0x7C, 0xA2 };
-#else
 static const u8 CMD_MEASURE_HPM[]     = { 0x78, 0x66 };
-#endif /* USE_SENSIRION_CLOCK_STRETCHING */
 static const u8 CMD_READ_ID_REG[]     = { 0xef, 0xc8 };
 static const u8 COMMAND_SIZE = sizeof(CMD_MEASURE_HPM);
 #ifdef SHT_ADDRESS
