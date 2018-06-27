@@ -153,8 +153,15 @@ s8 sht_probe()
 
     sensirion_i2c_init();
     s8 ret = sensirion_i2c_write(SHTC1_ADDRESS, CMD_READ_ID_REG, COMMAND_SIZE);
-    if (ret)
-        return ret;
+    if (ret) {
+        /* SHTC3 that's sleeping? */
+        if (sht_wakeup())
+            return ret; /* ..no */
+        /* ..potentially, try again */
+        ret = sensirion_i2c_write(SHTC1_ADDRESS, CMD_READ_ID_REG, COMMAND_SIZE);
+        if (ret)
+            return ret;
+    }
 
     ret = sensirion_i2c_read(SHTC1_ADDRESS, data, sizeof(data));
     if (ret)
