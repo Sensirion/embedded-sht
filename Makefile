@@ -42,5 +42,4 @@ $(clean_drivers):
 	cd $${driver} && $(MAKE) clean $(MFLAGS) && cd -
 
 clean: $(clean_drivers)
-	rm -rf release
-
+	rm -rf release sht-common/git_version.c
