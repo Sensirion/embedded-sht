@@ -1,4 +1,4 @@
-# embedded-sht
+# embedded-sht [![CircleCI](https://circleci.com/gh/Sensirion/embedded-sht.svg?style=shield)](https://circleci.com/gh/Sensirion/embedded-sht) [![GitHub license](https://img.shields.io/badge/license-BSD3-blue.svg)](https://raw.githubusercontent.com/Sensirion/embedded-sht/master/LICENSE)
 This repository contains the embedded driver sources for Sensirion's
 SHT product line.
 
