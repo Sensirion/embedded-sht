@@ -4,7 +4,7 @@ jobs:
   build:
 
     docker:
-        - image: gcc:5.4.0
+        - image: gcc:5.5
 
     steps:
 
