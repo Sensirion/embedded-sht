@@ -18,14 +18,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
@@ -47,28 +48,28 @@
 
 /* all measurement commands return T (CRC) RH (CRC) */
 #if USE_SENSIRION_CLOCK_STRETCHING
-static const u8 CMD_MEASURE_HPM[]     = { 0x7C, 0xA2 };
-static const u8 CMD_MEASURE_LPM[]     = { 0x64, 0x58 };
+static const u8 CMD_MEASURE_HPM[] = {0x7C, 0xA2};
+static const u8 CMD_MEASURE_LPM[] = {0x64, 0x58};
 #else
-static const u8 CMD_MEASURE_HPM[]     = { 0x78, 0x66 };
-static const u8 CMD_MEASURE_LPM[]     = { 0x60, 0x9C };
+static const u8 CMD_MEASURE_HPM[] = {0x78, 0x66};
+static const u8 CMD_MEASURE_LPM[] = {0x60, 0x9C};
 static const u16 MEASUREMENT_DURATION_USEC = 14400;
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
-static const u8 CMD_READ_ID_REG[]     = { 0xef, 0xc8 };
+static const u8 CMD_READ_ID_REG[] = {0xef, 0xc8};
 static const u8 COMMAND_SIZE = sizeof(CMD_MEASURE_HPM);
 
-static const u8 SHTC3_CMD_SLEEP[]     = { 0xB0, 0x98 };
-static const u8 SHTC3_CMD_WAKEUP[]    = { 0x35, 0x17 };
+static const u8 SHTC3_CMD_SLEEP[] = {0xB0, 0x98};
+static const u8 SHTC3_CMD_WAKEUP[] = {0x35, 0x17};
 #ifdef SHT_ADDRESS
 static const u8 SHTC1_ADDRESS = SHT_ADDRESS;
 #else
 static const u8 SHTC1_ADDRESS = 0x70;
 #endif
 
-static const u16 SHTC1_PRODUCT_CODE_MASK    = 0x001F;
-static const u16 SHTC1_PRODUCT_CODE         = 0x0007;
-static const u16 SHTC3_PRODUCT_CODE_MASK    = 0x083F;
-static const u16 SHTC3_PRODUCT_CODE         = 0x0807;
+static const u16 SHTC1_PRODUCT_CODE_MASK = 0x001F;
+static const u16 SHTC1_PRODUCT_CODE = 0x0007;
+static const u16 SHTC3_PRODUCT_CODE_MASK = 0x083F;
+static const u16 SHTC3_PRODUCT_CODE = 0x0807;
 
 static const u8 *cmd_measure = CMD_MEASURE_HPM;
 
@@ -93,34 +94,28 @@ static const u8 *cmd_measure = CMD_MEASURE_HPM;
  *          sht_sleep(); // attempting to sleep but ignore return value
  * }, (ret)
  */
-#define PM_WAKE(ret, cmd) (         \
-    ((ret) = sht_wakeup()) ?        \
-        (sht_sleep(), (ret)) :      \
-        ((ret) = (cmd) ?            \
-            sht_sleep(), (ret) :    \
-            (ret)))
+#define PM_WAKE(ret, cmd)                                                      \
+    (((ret) = sht_wakeup()) ? (sht_sleep(), (ret))                             \
+                            : ((ret) = (cmd) ? sht_sleep(), (ret) : (ret)))
 
 static u8 supports_sleep = 1;
 static u8 sleep_enabled = 1;
 
-static u8 sht_sleep()
-{
+static u8 sht_sleep() {
     if (!supports_sleep || !sleep_enabled)
         return STATUS_OK;
 
     return sensirion_i2c_write(SHTC1_ADDRESS, SHTC3_CMD_SLEEP, COMMAND_SIZE);
 }
 
-static u8 sht_wakeup()
-{
+static u8 sht_wakeup() {
     if (!supports_sleep || !sleep_enabled)
         return STATUS_OK;
 
     return sensirion_i2c_write(SHTC1_ADDRESS, SHTC3_CMD_WAKEUP, COMMAND_SIZE);
 }
 
-s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity)
-{
+s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity) {
     s8 ret;
 
     PM_WAKE(ret, sht_measure());
@@ -131,23 +126,20 @@ s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity)
     return PM_SLEEP(ret);
 }
 
-s8 sht_measure()
-{
+s8 sht_measure() {
     s8 ret;
 
-    return PM_WAKE(ret, sensirion_i2c_write(SHTC1_ADDRESS, cmd_measure,
-                                            COMMAND_SIZE));
+    return PM_WAKE(
+        ret, sensirion_i2c_write(SHTC1_ADDRESS, cmd_measure, COMMAND_SIZE));
 }
 
-s8 sht_read(s32 *temperature, s32 *humidity)
-{
+s8 sht_read(s32 *temperature, s32 *humidity) {
     s8 ret = sht_common_read_measurement(SHTC1_ADDRESS, temperature, humidity);
 
     return PM_SLEEP(ret);
 }
 
-s8 sht_probe()
-{
+s8 sht_probe() {
     u8 data[3];
     u16 id;
 
@@ -185,8 +177,7 @@ s8 sht_probe()
     return STATUS_UNKNOWN_DEVICE;
 }
 
-s8 sht_disable_sleep(u8 disable_sleep)
-{
+s8 sht_disable_sleep(u8 disable_sleep) {
     if (!supports_sleep)
         return STATUS_FAIL;
 
@@ -198,17 +189,14 @@ s8 sht_disable_sleep(u8 disable_sleep)
     return sht_sleep();
 }
 
-void sht_enable_low_power_mode(u8 enable_low_power_mode)
-{
+void sht_enable_low_power_mode(u8 enable_low_power_mode) {
     cmd_measure = enable_low_power_mode ? CMD_MEASURE_LPM : CMD_MEASURE_HPM;
 }
 
-const char *sht_get_driver_version()
-{
+const char *sht_get_driver_version() {
     return SHT_DRV_VERSION_STR;
 }
 
-u8 sht_get_configured_sht_address()
-{
+u8 sht_get_configured_sht_address() {
     return SHTC1_ADDRESS;
 }

@@ -18,14 +18,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
@@ -45,13 +46,13 @@
 
 /* all measurement commands return T (CRC) RH (CRC) */
 #if USE_SENSIRION_CLOCK_STRETCHING
-static const u8 CMD_MEASURE_HPM[]     = { 0x2C, 0x06 };
-static const u8 CMD_MEASURE_LPM[]     = { 0x2C, 0x10 };
+static const u8 CMD_MEASURE_HPM[] = {0x2C, 0x06};
+static const u8 CMD_MEASURE_LPM[] = {0x2C, 0x10};
 #else
-static const u8 CMD_MEASURE_HPM[]     = { 0x24, 0x00 };
-static const u8 CMD_MEASURE_LPM[]     = { 0x24, 0x16 };
+static const u8 CMD_MEASURE_HPM[] = {0x24, 0x00};
+static const u8 CMD_MEASURE_LPM[] = {0x24, 0x16};
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
-static const u8 CMD_READ_STATUS_REG[] = { 0xF3, 0x2D };
+static const u8 CMD_READ_STATUS_REG[] = {0xF3, 0x2D};
 static const u8 COMMAND_SIZE = sizeof(CMD_MEASURE_HPM);
 #ifdef SHT_ADDRESS
 static const u8 SHT3X_ADDRESS = SHT_ADDRESS;
@@ -63,8 +64,7 @@ static const u16 MEASUREMENT_DURATION_USEC = 15000;
 
 static const u8 *cmd_measure = CMD_MEASURE_HPM;
 
-s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity)
-{
+s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity) {
     s8 ret = sht_measure();
     if (ret == STATUS_OK) {
         sensirion_sleep_usec(MEASUREMENT_DURATION_USEC);
@@ -73,21 +73,19 @@ s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity)
     return ret;
 }
 
-s8 sht_measure()
-{
+s8 sht_measure() {
     return sensirion_i2c_write(SHT3X_ADDRESS, CMD_MEASURE_HPM, COMMAND_SIZE);
 }
 
-s8 sht_read(s32 *temperature, s32 *humidity)
-{
+s8 sht_read(s32 *temperature, s32 *humidity) {
     return sht_common_read_measurement(SHT3X_ADDRESS, temperature, humidity);
 }
 
-s8 sht_probe()
-{
+s8 sht_probe() {
     u8 data[3];
     sensirion_i2c_init();
-    s8 ret = sensirion_i2c_write(SHT3X_ADDRESS, CMD_READ_STATUS_REG, COMMAND_SIZE);
+    s8 ret =
+        sensirion_i2c_write(SHT3X_ADDRESS, CMD_READ_STATUS_REG, COMMAND_SIZE);
     if (ret)
         return ret;
 
@@ -101,22 +99,18 @@ s8 sht_probe()
     return STATUS_OK;
 }
 
-s8 sht_disable_sleep(u8 disable_sleep)
-{
+s8 sht_disable_sleep(u8 disable_sleep) {
     return STATUS_FAIL; /* sleep mode not supported */
 }
 
-void sht_enable_low_power_mode(u8 enable_low_power_mode)
-{
+void sht_enable_low_power_mode(u8 enable_low_power_mode) {
     cmd_measure = enable_low_power_mode ? CMD_MEASURE_LPM : CMD_MEASURE_HPM;
 }
 
-const char *sht_get_driver_version()
-{
+const char *sht_get_driver_version() {
     return SHT_DRV_VERSION_STR;
 }
 
-u8 sht_get_configured_sht_address()
-{
+u8 sht_get_configured_sht_address() {
     return SHT3X_ADDRESS;
 }
