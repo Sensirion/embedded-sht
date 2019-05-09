@@ -18,14 +18,15 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
@@ -40,8 +41,8 @@
 #ifndef SHT_H
 #define SHT_H
 
-#include "sensirion_arch_config.h"
 #include "git_version.h"
+#include "sensirion_arch_config.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -68,16 +69,18 @@ s8 sht_probe(void);
  * Temperature is returned in [degree Celsius], multiplied by 1000,
  * and relative humidity in [percent relative humidity], multiplied by 1000.
  *
- * @param temperature   the address for the result of the temperature measurement
- * @param humidity      the address for the result of the relative humidity measurement
+ * @param temperature   the address for the result of the temperature
+ * measurement
+ * @param humidity      the address for the result of the relative humidity
+ * measurement
  * @return              0 if the command was successful, else an error code.
  */
 s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity);
 
 /**
- * Starts a measurement in high precision mode. Use sht_read() to read out the values,
- * once the measurement is done. The duration of the measurement depends on the sensor
- * in use, please consult the datasheet.
+ * Starts a measurement in high precision mode. Use sht_read() to read out the
+ * values, once the measurement is done. The duration of the measurement depends
+ * on the sensor in use, please consult the datasheet.
  *
  * @return     0 if the command was successful, else an error code.
  */
@@ -90,8 +93,10 @@ s8 sht_measure(void);
  * Temperature is returned in [degree Celsius], multiplied by 1000,
  * and relative humidity in [percent relative humidity], multiplied by 1000.
  *
- * @param temperature   the address for the result of the temperature measurement
- * @param humidity      the address for the result of the relative humidity measurement
+ * @param temperature   the address for the result of the temperature
+ * measurement
+ * @param humidity      the address for the result of the relative humidity
+ * measurement
  * @return              0 if the command was successful, else an error code.
  */
 s8 sht_read(s32 *temperature, s32 *humidity);
