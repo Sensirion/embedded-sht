@@ -46,26 +46,26 @@
 
 /* all measurement commands return T (CRC) RH (CRC) */
 #if USE_SENSIRION_CLOCK_STRETCHING
-static const u8 CMD_MEASURE_HPM[] = {0x2C, 0x06};
-static const u8 CMD_MEASURE_LPM[] = {0x2C, 0x10};
+static const uint8_t CMD_MEASURE_HPM[] = {0x2C, 0x06};
+static const uint8_t CMD_MEASURE_LPM[] = {0x2C, 0x10};
 #else
-static const u8 CMD_MEASURE_HPM[] = {0x24, 0x00};
-static const u8 CMD_MEASURE_LPM[] = {0x24, 0x16};
+static const uint8_t CMD_MEASURE_HPM[] = {0x24, 0x00};
+static const uint8_t CMD_MEASURE_LPM[] = {0x24, 0x16};
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
-static const u8 CMD_READ_STATUS_REG[] = {0xF3, 0x2D};
-static const u8 COMMAND_SIZE = sizeof(CMD_MEASURE_HPM);
+static const uint8_t CMD_READ_STATUS_REG[] = {0xF3, 0x2D};
+static const uint8_t COMMAND_SIZE = sizeof(CMD_MEASURE_HPM);
 #ifdef SHT_ADDRESS
-static const u8 SHT3X_ADDRESS = SHT_ADDRESS;
+static const uint8_t SHT3X_ADDRESS = SHT_ADDRESS;
 #else
-static const u8 SHT3X_ADDRESS = 0x44;
+static const uint8_t SHT3X_ADDRESS = 0x44;
 #endif
 
-static const u16 MEASUREMENT_DURATION_USEC = 15000;
+static const uint16_t MEASUREMENT_DURATION_USEC = 15000;
 
-static const u8 *cmd_measure = CMD_MEASURE_HPM;
+static const uint8_t *cmd_measure = CMD_MEASURE_HPM;
 
-s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity) {
-    s8 ret = sht_measure();
+int8_t sht_measure_blocking_read(int32_t *temperature, int32_t *humidity) {
+    int8_t ret = sht_measure();
     if (ret == STATUS_OK) {
         sensirion_sleep_usec(MEASUREMENT_DURATION_USEC);
         ret = sht_read(temperature, humidity);
@@ -73,18 +73,18 @@ s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity) {
     return ret;
 }
 
-s8 sht_measure() {
+int8_t sht_measure() {
     return sensirion_i2c_write(SHT3X_ADDRESS, CMD_MEASURE_HPM, COMMAND_SIZE);
 }
 
-s8 sht_read(s32 *temperature, s32 *humidity) {
+int8_t sht_read(int32_t *temperature, int32_t *humidity) {
     return sht_common_read_measurement(SHT3X_ADDRESS, temperature, humidity);
 }
 
-s8 sht_probe() {
-    u8 data[3];
+int8_t sht_probe() {
+    uint8_t data[3];
     sensirion_i2c_init();
-    s8 ret =
+    int8_t ret =
         sensirion_i2c_write(SHT3X_ADDRESS, CMD_READ_STATUS_REG, COMMAND_SIZE);
     if (ret)
         return ret;
@@ -99,11 +99,11 @@ s8 sht_probe() {
     return STATUS_OK;
 }
 
-s8 sht_disable_sleep(u8 disable_sleep) {
+int8_t sht_disable_sleep(uint8_t disable_sleep) {
     return STATUS_FAIL; /* sleep mode not supported */
 }
 
-void sht_enable_low_power_mode(u8 enable_low_power_mode) {
+void sht_enable_low_power_mode(uint8_t enable_low_power_mode) {
     cmd_measure = enable_low_power_mode ? CMD_MEASURE_LPM : CMD_MEASURE_HPM;
 }
 
@@ -111,6 +111,6 @@ const char *sht_get_driver_version() {
     return SHT_DRV_VERSION_STR;
 }
 
-u8 sht_get_configured_sht_address() {
+uint8_t sht_get_configured_sht_address() {
     return SHT3X_ADDRESS;
 }
