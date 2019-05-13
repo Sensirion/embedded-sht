@@ -38,10 +38,11 @@
 extern "C" {
 #endif
 
-s8 sht_common_read_ticks(u8 address, s32 *temperature_ticks,
-                         s32 *humidity_ticks);
+int8_t sht_common_read_ticks(uint8_t address, int32_t *temperature_ticks,
+                             int32_t *humidity_ticks);
 
-s8 sht_common_read_measurement(u8 address, s32 *temperature, s32 *humidity);
+int8_t sht_common_read_measurement(uint8_t address, int32_t *temperature,
+                                   int32_t *humidity);
 
 #ifdef __cplusplus
 }

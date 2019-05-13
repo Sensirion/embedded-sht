@@ -60,7 +60,7 @@ extern "C" {
  *
  * @return 0 if a sensor was detected
  */
-s8 sht_probe(void);
+int8_t sht_probe(void);
 
 /**
  * Starts a measurement and then reads out the results. This function blocks
@@ -75,7 +75,7 @@ s8 sht_probe(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity);
+int8_t sht_measure_blocking_read(int32_t *temperature, int32_t *humidity);
 
 /**
  * Starts a measurement in high precision mode. Use sht_read() to read out the
@@ -84,7 +84,7 @@ s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity);
  *
  * @return     0 if the command was successful, else an error code.
  */
-s8 sht_measure(void);
+int8_t sht_measure(void);
 
 /**
  * Reads out the results of a measurement that was previously started by
@@ -99,7 +99,7 @@ s8 sht_measure(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-s8 sht_read(s32 *temperature, s32 *humidity);
+int8_t sht_read(int32_t *temperature, int32_t *humidity);
 
 /**
  * Enable or disable the SHT's sleep mode between measurements, if supported.
@@ -110,14 +110,14 @@ s8 sht_read(s32 *temperature, s32 *humidity);
  * @return              0 if the command was successful,
  *                      1 if an error occured or if sleep mode is not supported
  */
-s8 sht_disable_sleep(u8 disable_sleep);
+int8_t sht_disable_sleep(uint8_t disable_sleep);
 
 /**
  * Enable or disable the SHT's low power mode
  *
  * @param enable_low_power_mode 1 to enable low power mode, 0 to disable
  */
-void sht_enable_low_power_mode(u8 enable_low_power_mode);
+void sht_enable_low_power_mode(uint8_t enable_low_power_mode);
 
 /**
  * sht_get_driver_version() - Return the driver version
@@ -131,7 +131,7 @@ const char *sht_get_driver_version(void);
  *
  * @return SHTxx_ADDRESS
  */
-u8 sht_get_configured_sht_address(void);
+uint8_t sht_get_configured_sht_address(void);
 
 #ifdef __cplusplus
 }

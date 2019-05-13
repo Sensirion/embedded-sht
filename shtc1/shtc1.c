@@ -48,30 +48,30 @@
 
 /* all measurement commands return T (CRC) RH (CRC) */
 #if USE_SENSIRION_CLOCK_STRETCHING
-static const u8 CMD_MEASURE_HPM[] = {0x7C, 0xA2};
-static const u8 CMD_MEASURE_LPM[] = {0x64, 0x58};
+static const uint8_t CMD_MEASURE_HPM[] = {0x7C, 0xA2};
+static const uint8_t CMD_MEASURE_LPM[] = {0x64, 0x58};
 #else
-static const u8 CMD_MEASURE_HPM[] = {0x78, 0x66};
-static const u8 CMD_MEASURE_LPM[] = {0x60, 0x9C};
-static const u16 MEASUREMENT_DURATION_USEC = 14400;
+static const uint8_t CMD_MEASURE_HPM[] = {0x78, 0x66};
+static const uint8_t CMD_MEASURE_LPM[] = {0x60, 0x9C};
+static const uint16_t MEASUREMENT_DURATION_USEC = 14400;
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
-static const u8 CMD_READ_ID_REG[] = {0xef, 0xc8};
-static const u8 COMMAND_SIZE = sizeof(CMD_MEASURE_HPM);
+static const uint8_t CMD_READ_ID_REG[] = {0xef, 0xc8};
+static const uint8_t COMMAND_SIZE = sizeof(CMD_MEASURE_HPM);
 
-static const u8 SHTC3_CMD_SLEEP[] = {0xB0, 0x98};
-static const u8 SHTC3_CMD_WAKEUP[] = {0x35, 0x17};
+static const uint8_t SHTC3_CMD_SLEEP[] = {0xB0, 0x98};
+static const uint8_t SHTC3_CMD_WAKEUP[] = {0x35, 0x17};
 #ifdef SHT_ADDRESS
-static const u8 SHTC1_ADDRESS = SHT_ADDRESS;
+static const uint8_t SHTC1_ADDRESS = SHT_ADDRESS;
 #else
-static const u8 SHTC1_ADDRESS = 0x70;
+static const uint8_t SHTC1_ADDRESS = 0x70;
 #endif
 
-static const u16 SHTC1_PRODUCT_CODE_MASK = 0x001F;
-static const u16 SHTC1_PRODUCT_CODE = 0x0007;
-static const u16 SHTC3_PRODUCT_CODE_MASK = 0x083F;
-static const u16 SHTC3_PRODUCT_CODE = 0x0807;
+static const uint16_t SHTC1_PRODUCT_CODE_MASK = 0x001F;
+static const uint16_t SHTC1_PRODUCT_CODE = 0x0007;
+static const uint16_t SHTC3_PRODUCT_CODE_MASK = 0x083F;
+static const uint16_t SHTC3_PRODUCT_CODE = 0x0807;
 
-static const u8 *cmd_measure = CMD_MEASURE_HPM;
+static const uint8_t *cmd_measure = CMD_MEASURE_HPM;
 
 /**
  * PM_SLEEP is equivalent to
@@ -98,25 +98,25 @@ static const u8 *cmd_measure = CMD_MEASURE_HPM;
     (((ret) = sht_wakeup()) ? (sht_sleep(), (ret))                             \
                             : ((ret) = (cmd) ? sht_sleep(), (ret) : (ret)))
 
-static u8 supports_sleep = 1;
-static u8 sleep_enabled = 1;
+static uint8_t supports_sleep = 1;
+static uint8_t sleep_enabled = 1;
 
-static u8 sht_sleep() {
+static uint8_t sht_sleep() {
     if (!supports_sleep || !sleep_enabled)
         return STATUS_OK;
 
     return sensirion_i2c_write(SHTC1_ADDRESS, SHTC3_CMD_SLEEP, COMMAND_SIZE);
 }
 
-static u8 sht_wakeup() {
+static uint8_t sht_wakeup() {
     if (!supports_sleep || !sleep_enabled)
         return STATUS_OK;
 
     return sensirion_i2c_write(SHTC1_ADDRESS, SHTC3_CMD_WAKEUP, COMMAND_SIZE);
 }
 
-s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity) {
-    s8 ret;
+int8_t sht_measure_blocking_read(int32_t *temperature, int32_t *humidity) {
+    int8_t ret;
 
     PM_WAKE(ret, sht_measure());
 #if !defined(USE_SENSIRION_CLOCK_STRETCHING) || !USE_SENSIRION_CLOCK_STRETCHING
@@ -126,25 +126,27 @@ s8 sht_measure_blocking_read(s32 *temperature, s32 *humidity) {
     return PM_SLEEP(ret);
 }
 
-s8 sht_measure() {
-    s8 ret;
+int8_t sht_measure() {
+    int8_t ret;
 
     return PM_WAKE(
         ret, sensirion_i2c_write(SHTC1_ADDRESS, cmd_measure, COMMAND_SIZE));
 }
 
-s8 sht_read(s32 *temperature, s32 *humidity) {
-    s8 ret = sht_common_read_measurement(SHTC1_ADDRESS, temperature, humidity);
+int8_t sht_read(int32_t *temperature, int32_t *humidity) {
+    int8_t ret =
+        sht_common_read_measurement(SHTC1_ADDRESS, temperature, humidity);
 
     return PM_SLEEP(ret);
 }
 
-s8 sht_probe() {
-    u8 data[3];
-    u16 id;
+int8_t sht_probe() {
+    uint8_t data[3];
+    uint16_t id;
 
     sensirion_i2c_init();
-    s8 ret = sensirion_i2c_write(SHTC1_ADDRESS, CMD_READ_ID_REG, COMMAND_SIZE);
+    int8_t ret =
+        sensirion_i2c_write(SHTC1_ADDRESS, CMD_READ_ID_REG, COMMAND_SIZE);
     if (ret) {
         /* SHTC3 that's sleeping? */
         if (sht_wakeup())
@@ -163,7 +165,7 @@ s8 sht_probe() {
     if (ret)
         return ret;
 
-    id = ((u16)data[0] << 8) | data[1];
+    id = ((uint16_t)data[0] << 8) | data[1];
     if ((id & SHTC3_PRODUCT_CODE_MASK) == SHTC3_PRODUCT_CODE) {
         supports_sleep = 1;
         return sht_sleep();
@@ -177,7 +179,7 @@ s8 sht_probe() {
     return STATUS_UNKNOWN_DEVICE;
 }
 
-s8 sht_disable_sleep(u8 disable_sleep) {
+int8_t sht_disable_sleep(uint8_t disable_sleep) {
     if (!supports_sleep)
         return STATUS_FAIL;
 
@@ -189,7 +191,7 @@ s8 sht_disable_sleep(u8 disable_sleep) {
     return sht_sleep();
 }
 
-void sht_enable_low_power_mode(u8 enable_low_power_mode) {
+void sht_enable_low_power_mode(uint8_t enable_low_power_mode) {
     cmd_measure = enable_low_power_mode ? CMD_MEASURE_LPM : CMD_MEASURE_HPM;
 }
 
@@ -197,6 +199,6 @@ const char *sht_get_driver_version() {
     return SHT_DRV_VERSION_STR;
 }
 
-u8 sht_get_configured_sht_address() {
+uint8_t sht_get_configured_sht_address() {
     return SHTC1_ADDRESS;
 }
