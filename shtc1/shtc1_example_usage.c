@@ -29,45 +29,42 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* #include <stdio.h> // printf
+ * #include <unistd.h> // sleep
+ */
+#include "shtc1.h"
+
 /**
- * \file
- *
- * This module provides functionality that is common to all SHT drivers
+ * TO USE CONSOLE OUTPUT (PRINTF) AND WAIT (SLEEP) PLEASE ADAPT THEM TO YOUR
+ * PLATFORM
  */
 
-#include "sht_common.h"
-#include "sensirion_arch_config.h"
-#include "sensirion_common.h"
-#include "sensirion_i2c.h"
-#include "sht.h"
+int main(void) {
 
-int8_t sht_common_read_ticks(uint8_t address, int32_t *temperature_ticks,
-                             int32_t *humidity_ticks) {
-    uint8_t data[6];
-    int8_t ret = sensirion_i2c_read(address, data, sizeof(data));
-    if (ret)
-        return ret;
-    if (sensirion_common_check_crc(data, 2, data[2]) ||
-        sensirion_common_check_crc(data + 3, 2, data[5])) {
-        return STATUS_CRC_FAIL;
-    }
-
-    *temperature_ticks = (data[1] & 0xff) | ((int32_t)data[0] << 8);
-    *humidity_ticks = (data[4] & 0xff) | ((int32_t)data[3] << 8);
-
-    return STATUS_OK;
-}
-
-int8_t sht_common_read_measurement(uint8_t address, int32_t *temperature,
-                                   int32_t *humidity) {
-    int8_t ret = sht_common_read_ticks(address, temperature, humidity);
-    /**
-     * formulas for conversion of the sensor signals, optimized for fixed point
-     * algebra: Temperature       = 175 * S_T / 2^16 - 45 Relative Humidity =
-     * 100 * S_RH / 2^16
+    /* Busy loop for initialization, because the main loop does not work without
+     * a sensor.
      */
-    *temperature = ((21875 * *temperature) >> 13) - 45000;
-    *humidity = ((12500 * *humidity) >> 13);
+    while (shtc1_probe() != STATUS_OK) {
+        /* printf("SHT sensor probing failed\n"); */
+    }
+    /* printf("SHT sensor probing successful\n"); */
 
-    return ret;
+    while (1) {
+        int32_t temperature, humidity;
+        /* Measure temperature and relative humidity and store into variables
+         * temperature, humidity (each output multiplied by 1000).
+         */
+        int8_t ret = shtc1_measure_blocking_read(&temperature, &humidity);
+        if (ret == STATUS_OK) {
+            /* printf("measured temperature: %0.2f degreeCelsius, "
+                      "measured humidity: %0.2f percentRH\n",
+                      temperature / 1000.0f,
+                      humidity / 1000.0f); */
+        } else {
+            /* printf("error reading measurement\n"); */
+        }
+
+        /* sleep(1); */
+    }
+    return 0;
 }

@@ -38,8 +38,8 @@
  * interface. It supports measurements without clock stretching only.
  */
 
-#ifndef SHT_H
-#define SHT_H
+#ifndef SHTC1_H
+#define SHTC1_H
 
 #include "git_version.h"
 #include "sensirion_arch_config.h"
@@ -60,7 +60,7 @@ extern "C" {
  *
  * @return 0 if a sensor was detected
  */
-int8_t sht_probe(void);
+int8_t shtc1_probe(void);
 
 /**
  * Starts a measurement and then reads out the results. This function blocks
@@ -75,20 +75,20 @@ int8_t sht_probe(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int8_t sht_measure_blocking_read(int32_t *temperature, int32_t *humidity);
+int8_t shtc1_measure_blocking_read(int32_t *temperature, int32_t *humidity);
 
 /**
- * Starts a measurement in high precision mode. Use sht_read() to read out the
+ * Starts a measurement in high precision mode. Use shtc1_read() to read out the
  * values, once the measurement is done. The duration of the measurement depends
  * on the sensor in use, please consult the datasheet.
  *
  * @return     0 if the command was successful, else an error code.
  */
-int8_t sht_measure(void);
+int8_t shtc1_measure(void);
 
 /**
  * Reads out the results of a measurement that was previously started by
- * sht_measure(). If the measurement is still in progress, this function
+ * shtc1_measure(). If the measurement is still in progress, this function
  * returns an error.
  * Temperature is returned in [degree Celsius], multiplied by 1000,
  * and relative humidity in [percent relative humidity], multiplied by 1000.
@@ -99,7 +99,7 @@ int8_t sht_measure(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int8_t sht_read(int32_t *temperature, int32_t *humidity);
+int8_t shtc1_read(int32_t *temperature, int32_t *humidity);
 
 /**
  * Enable or disable the SHT's sleep mode between measurements, if supported.
@@ -110,31 +110,31 @@ int8_t sht_read(int32_t *temperature, int32_t *humidity);
  * @return              0 if the command was successful,
  *                      1 if an error occured or if sleep mode is not supported
  */
-int8_t sht_disable_sleep(uint8_t disable_sleep);
+int8_t shtc1_disable_sleep(uint8_t disable_sleep);
 
 /**
  * Enable or disable the SHT's low power mode
  *
  * @param enable_low_power_mode 1 to enable low power mode, 0 to disable
  */
-void sht_enable_low_power_mode(uint8_t enable_low_power_mode);
+void shtc1_enable_low_power_mode(uint8_t enable_low_power_mode);
 
 /**
- * sht_get_driver_version() - Return the driver version
+ * Return the driver version
  *
  * @return Driver version string
  */
-const char *sht_get_driver_version(void);
+const char *shtc1_get_driver_version(void);
 
 /**
- * Returns the configured SHTxx address.
+ * Returns the configured SHT3x address.
  *
- * @return SHTxx_ADDRESS
+ * @return SHT3x_ADDRESS
  */
-uint8_t sht_get_configured_sht_address(void);
+uint8_t shtc1_get_configured_address(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* SHT_H */
+#endif /* SHTC1_H */

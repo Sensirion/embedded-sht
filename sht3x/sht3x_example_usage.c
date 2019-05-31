@@ -29,23 +29,42 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SHT_COMMON_H
-#define SHT_COMMON_H
+/* #include <stdio.h> // printf
+ * #include <unistd.h> // sleep
+ */
+#include "sht3x.h"
 
-#include "sensirion_arch_config.h"
+/**
+ * TO USE CONSOLE OUTPUT (PRINTF) AND WAIT (SLEEP) PLEASE ADAPT THEM TO YOUR
+ * PLATFORM
+ */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+int main(void) {
 
-int8_t sht_common_read_ticks(uint8_t address, int32_t *temperature_ticks,
-                             int32_t *humidity_ticks);
+    /* Busy loop for initialization, because the main loop does not work without
+     * a sensor.
+     */
+    while (sht3x_probe() != STATUS_OK) {
+        /* printf("SHT sensor probing failed\n"); */
+    }
+    /* printf("SHT sensor probing successful\n"); */
 
-int8_t sht_common_read_measurement(uint8_t address, int32_t *temperature,
-                                   int32_t *humidity);
+    while (1) {
+        int32_t temperature, humidity;
+        /* Measure temperature and relative humidity and store into variables
+         * temperature, humidity (each output multiplied by 1000).
+         */
+        int8_t ret = sht3x_measure_blocking_read(&temperature, &humidity);
+        if (ret == STATUS_OK) {
+            /* printf("measured temperature: %0.2f degreeCelsius, "
+                      "measured humidity: %0.2f percentRH\n",
+                      temperature / 1000.0f,
+                      humidity / 1000.0f); */
+        } else {
+            /* printf("error reading measurement\n"); */
+        }
 
-#ifdef __cplusplus
+        /* sleep(1); */
+    }
+    return 0;
 }
-#endif
-
-#endif /* SHT_COMMON_H */
