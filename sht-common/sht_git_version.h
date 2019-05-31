@@ -29,9 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef GIT_VERSION_H
-#define GIT_VERSION_H
+#ifndef SHT_GIT_VERSION_H
+#define SHT_GIT_VERSION_H
 
 extern const char *SHT_DRV_VERSION_STR;
 
-#endif /* GIT_VERSION_H */
+#endif /* SHT_GIT_VERSION_H */

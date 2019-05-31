@@ -41,8 +41,8 @@
 #ifndef SHTC1_H
 #define SHTC1_H
 
-#include "git_version.h"
 #include "sensirion_arch_config.h"
+#include "sht_git_version.h"
 
 #ifdef __cplusplus
 extern "C" {

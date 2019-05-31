@@ -41,8 +41,8 @@
 #ifndef SHT3X_H
 #define SHT3X_H
 
-#include "git_version.h"
 #include "sensirion_arch_config.h"
+#include "sht_git_version.h"
 
 #ifdef __cplusplus
 extern "C" {

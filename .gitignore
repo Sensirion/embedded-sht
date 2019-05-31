@@ -4,4 +4,4 @@
 /sht3x/sht3x_example_usage_sw_i2c
 /shtc1/shtc1_example_usage_hw_i2c
 /shtc1/shtc1_example_usage_sw_i2c
-/sht-common/git_version.c
+/sht-common/sht_git_version.c
