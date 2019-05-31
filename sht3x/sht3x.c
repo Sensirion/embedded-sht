@@ -38,11 +38,10 @@
  * interface. It supports measurements without clock stretching only.
  */
 
+#include "sht3x.h"
 #include "sensirion_arch_config.h"
 #include "sensirion_common.h"
 #include "sensirion_i2c.h"
-#include "sht.h"
-#include "sht_common.h"
 
 /* all measurement commands return T (CRC) RH (CRC) */
 #if USE_SENSIRION_CLOCK_STRETCHING
@@ -64,24 +63,55 @@ static const uint16_t MEASUREMENT_DURATION_USEC = 15000;
 
 static const uint8_t *cmd_measure = CMD_MEASURE_HPM;
 
-int8_t sht_measure_blocking_read(int32_t *temperature, int32_t *humidity) {
-    int8_t ret = sht_measure();
+static int8_t sht3x_read_ticks(uint8_t address, int32_t *temperature_ticks,
+                               int32_t *humidity_ticks) {
+    uint8_t data[6];
+    int8_t ret = sensirion_i2c_read(address, data, sizeof(data));
+    if (ret)
+        return ret;
+    if (sensirion_common_check_crc(data, 2, data[2]) ||
+        sensirion_common_check_crc(data + 3, 2, data[5])) {
+        return STATUS_CRC_FAIL;
+    }
+
+    *temperature_ticks = (data[1] & 0xff) | ((int32_t)data[0] << 8);
+    *humidity_ticks = (data[4] & 0xff) | ((int32_t)data[3] << 8);
+
+    return STATUS_OK;
+}
+
+static int8_t sht3x_read_measurement(uint8_t address, int32_t *temperature,
+                                     int32_t *humidity) {
+    int8_t ret = sht3x_read_ticks(address, temperature, humidity);
+    /**
+     * formulas for conversion of the sensor signals, optimized for fixed point
+     * algebra: Temperature       = 175 * S_T / 2^16 - 45 Relative Humidity =
+     * 100 * S_RH / 2^16
+     */
+    *temperature = ((21875 * *temperature) >> 13) - 45000;
+    *humidity = ((12500 * *humidity) >> 13);
+
+    return ret;
+}
+
+int8_t sht3x_measure_blocking_read(int32_t *temperature, int32_t *humidity) {
+    int8_t ret = sht3x_measure();
     if (ret == STATUS_OK) {
         sensirion_sleep_usec(MEASUREMENT_DURATION_USEC);
-        ret = sht_read(temperature, humidity);
+        ret = sht3x_read(temperature, humidity);
     }
     return ret;
 }
 
-int8_t sht_measure() {
+int8_t sht3x_measure() {
     return sensirion_i2c_write(SHT3X_ADDRESS, CMD_MEASURE_HPM, COMMAND_SIZE);
 }
 
-int8_t sht_read(int32_t *temperature, int32_t *humidity) {
-    return sht_common_read_measurement(SHT3X_ADDRESS, temperature, humidity);
+int8_t sht3x_read(int32_t *temperature, int32_t *humidity) {
+    return sht3x_read_measurement(SHT3X_ADDRESS, temperature, humidity);
 }
 
-int8_t sht_probe() {
+int8_t sht3x_probe(void) {
     uint8_t data[3];
     sensirion_i2c_init();
     int8_t ret =
@@ -99,18 +129,18 @@ int8_t sht_probe() {
     return STATUS_OK;
 }
 
-int8_t sht_disable_sleep(uint8_t disable_sleep) {
+int8_t sht3x_disable_sleep(uint8_t disable_sleep) {
     return STATUS_FAIL; /* sleep mode not supported */
 }
 
-void sht_enable_low_power_mode(uint8_t enable_low_power_mode) {
+void sht3x_enable_low_power_mode(uint8_t enable_low_power_mode) {
     cmd_measure = enable_low_power_mode ? CMD_MEASURE_LPM : CMD_MEASURE_HPM;
 }
 
-const char *sht_get_driver_version() {
+const char *sht3x_get_driver_version(void) {
     return SHT_DRV_VERSION_STR;
 }
 
-uint8_t sht_get_configured_sht_address() {
+uint8_t sht3x_get_configured_address(void) {
     return SHT3X_ADDRESS;
 }
