@@ -113,7 +113,7 @@ int8_t sht3x_read(int32_t *temperature, int32_t *humidity) {
 
 int8_t sht3x_probe(void) {
     uint8_t data[3];
-    sensirion_i2c_init();
+
     int8_t ret =
         sensirion_i2c_write(SHT3X_ADDRESS, CMD_READ_STATUS_REG, COMMAND_SIZE);
     if (ret)
