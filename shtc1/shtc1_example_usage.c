@@ -40,6 +40,8 @@
  */
 
 int main(void) {
+    /* Initialize the i2c bus for the current platform */
+    sensirion_i2c_init();
 
     /* Busy loop for initialization, because the main loop does not work without
      * a sensor.

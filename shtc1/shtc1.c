@@ -173,7 +173,6 @@ int8_t shtc1_probe(void) {
     uint8_t data[3];
     uint16_t id;
 
-    sensirion_i2c_init();
     int8_t ret =
         sensirion_i2c_write(SHTC1_ADDRESS, CMD_READ_ID_REG, COMMAND_SIZE);
     if (ret) {
