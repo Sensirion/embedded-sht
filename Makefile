@@ -32,7 +32,7 @@ $(release_drivers): sht-common/sht_git_version.c
 	perl -pi -e 's/^sht_common_dir :=.*$$/sht_common_dir := ./' "$${pkgdir}/Makefile" && \
 	cd "$${pkgdir}" && $(MAKE) $(MFLAGS) && $(MAKE) clean $(MFLAGS) && cd - && \
 	cd release && zip -r "$${pkgname}.zip" "$${pkgname}" && cd - && \
-	ln -sf $${pkgname} $@
+	ln -sfn $${pkgname} $@
 
 release: clean $(release_drivers)
 
