@@ -63,7 +63,7 @@ extern "C" {
  *
  * @return 0 if a sensor was detected
  */
-int8_t shtc1_probe(void);
+int16_t shtc1_probe(void);
 
 /**
  * Starts a measurement and then reads out the results. This function blocks
@@ -78,7 +78,7 @@ int8_t shtc1_probe(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int8_t shtc1_measure_blocking_read(int32_t *temperature, int32_t *humidity);
+int16_t shtc1_measure_blocking_read(int32_t *temperature, int32_t *humidity);
 
 /**
  * Starts a measurement in high precision mode. Use shtc1_read() to read out the
@@ -87,7 +87,7 @@ int8_t shtc1_measure_blocking_read(int32_t *temperature, int32_t *humidity);
  *
  * @return     0 if the command was successful, else an error code.
  */
-int8_t shtc1_measure(void);
+int16_t shtc1_measure(void);
 
 /**
  * Reads out the results of a measurement that was previously started by
@@ -102,7 +102,7 @@ int8_t shtc1_measure(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int8_t shtc1_read(int32_t *temperature, int32_t *humidity);
+int16_t shtc1_read(int32_t *temperature, int32_t *humidity);
 
 /**
  * Enable or disable the SHT's sleep mode between measurements, if supported.
@@ -113,7 +113,7 @@ int8_t shtc1_read(int32_t *temperature, int32_t *humidity);
  * @return              0 if the command was successful,
  *                      1 if an error occured or if sleep mode is not supported
  */
-int8_t shtc1_disable_sleep(uint8_t disable_sleep);
+int16_t shtc1_disable_sleep(uint8_t disable_sleep);
 
 /**
  * Enable or disable the SHT's low power mode
