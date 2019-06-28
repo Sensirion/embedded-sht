@@ -22,3 +22,11 @@ jobs:
           command: |
               cd release/sht3x && make && make clean && cd -
               cd release/shtc1 && make && make clean && cd -
+      - run:
+          name: Move zip files to artifacts directory
+          command: |
+            mkdir -p /releases
+            mv release/*.zip /releases/
+
+      - store_artifacts:
+          path: /releases
