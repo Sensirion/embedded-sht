@@ -20,7 +20,16 @@ developer resources for different platforms and products.
 ## Cloning this Repository
 
 ```
-git clone https://github.com/Sensirion/shtc3-stm-sample-project.git
+git clone --recursive https://github.com/Sensirion/embedded-sht.git
+```
+
+## Building from the repository
+
+If you cloned the repository, prior to building the project you need to execute
+the following script in Git Bash:
+
+```bash
+./copy_shtc1_driver.sh
 ```
 
 [STM32VLDISCOVERY]: https://www.st.com/en/evaluation-tools/stm32vldiscovery.html
