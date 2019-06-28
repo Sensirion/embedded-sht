@@ -47,15 +47,15 @@ int main(void) {
 
     led_init();
 
-    /* Blink shortly at start to indicate that the we started */
-    led_green(true);
-    sensirion_sleep_usec(100000);
-    led_green(false);
-
     /* Busy loop for initialization, because the main loop does not work without
      * a sensor.
      */
     while (shtc1_probe() != STATUS_OK) {
+        /* Blink LED as long as probing fails */
+        led_green(true);
+        sensirion_sleep_usec(100000);
+        led_green(false);
+        sensirion_sleep_usec(100000);
     }
 
     /* probe sucessfull -> green LED on */
