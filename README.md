@@ -10,7 +10,7 @@ SHT product line.
 ## Repository content
 * embedded-common (submodule repository for the common embedded driver HAL)
 * sht-common (common files for all SHTxx drivers)
-* sht3x (SHT3x driver related)
+* sht3x (SHT3x/SHT8x driver related)
 * shtc1 (SHTC3/SHTC1/SHTW1/SHTW2 driver related)
 
 ## Collecting resources
