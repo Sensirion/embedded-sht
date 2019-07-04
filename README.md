@@ -2,6 +2,13 @@
 This repository contains the embedded driver sources for Sensirion's
 SHT product line.
 
+## Download the Latest Driver Release
+**Download the latest ready-to-use driver bundle from the [releases
+page](https://github.com/Sensirion/embedded-sht/releases/)**
+
+We strongly recommend to use the driver from the release bundle instead of
+cloning the repository.
+
 ## Clone this repository
 ```
  git clone --recursive https://github.com/Sensirion/embedded-sht.git
