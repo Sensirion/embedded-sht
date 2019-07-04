@@ -3,7 +3,7 @@ sht_common_dir := ../sht-common
 sw_i2c_dir := ${sensirion_common_dir}/sw_i2c
 hw_i2c_dir := ${sensirion_common_dir}/hw_i2c
 
-CFLAGS := -Wall -I. -I${sensirion_common_dir} -I${sht_common_dir}
+CFLAGS := -Wall -Wsign-conversion -I. -I${sensirion_common_dir} -I${sht_common_dir}
 
 sensirion_common_objects := sensirion_common.o
 sht_common_objects := sht_git_version.o
