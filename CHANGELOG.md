@@ -5,6 +5,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+ * [`fixed`]    Fix warnings about sign conversion
+ * [`fixed`]    Improved compatibility with C++ compilers
+
 ## [4.0.0] - 2019-07-01
 
  * [`changed`]  Return types are now `int16_t` instead of `int8_t` (in line with
