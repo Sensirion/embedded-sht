@@ -203,6 +203,33 @@ void shtc1_enable_low_power_mode(uint8_t enable_low_power_mode) {
         enable_low_power_mode ? SHTC1_CMD_MEASURE_LPM : SHTC1_CMD_MEASURE_HPM;
 }
 
+int16_t shtc1_read_serial(uint32_t *serial) {
+    int16_t ret;
+    const uint16_t tx_words[] = {0x007B};
+    uint16_t serial_words[SENSIRION_NUM_WORDS(*serial)];
+
+    PM_WAKE(ret,
+            sensirion_i2c_write_cmd_with_args(SHTC1_ADDRESS, 0xC595, tx_words,
+                                              SENSIRION_NUM_WORDS(tx_words)));
+    if (ret)
+        return ret;
+
+    sensirion_sleep_usec(SHTC1_CMD_DURATION_USEC);
+
+    ret = sensirion_i2c_delayed_read_cmd(
+        SHTC1_ADDRESS, 0xC7F7, SHTC1_CMD_DURATION_USEC, &serial_words[0], 1);
+    if (ret)
+        return PM_SLEEP(ret);
+
+    ret = sensirion_i2c_delayed_read_cmd(
+        SHTC1_ADDRESS, 0xC7F7, SHTC1_CMD_DURATION_USEC, &serial_words[1], 1);
+    if (ret)
+        return PM_SLEEP(ret);
+
+    *serial = ((uint32_t)serial_words[0] << 16) | serial_words[1];
+    return PM_SLEEP(ret);
+}
+
 const char *shtc1_get_driver_version(void) {
     return SHT_DRV_VERSION_STR;
 }

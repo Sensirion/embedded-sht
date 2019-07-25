@@ -53,6 +53,7 @@
 #define SHT3X_MEASUREMENT_DURATION_USEC 15000
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
 static const uint16_t SHT3X_CMD_READ_STATUS_REG = 0xF32D;
+static const uint16_t SHT3X_CMD_READ_SERIAL_ID = 0x3780;
 static const uint16_t SHT3X_CMD_DURATION_USEC = 1000;
 #ifdef SHT_ADDRESS
 static const uint8_t SHT3X_ADDRESS = SHT_ADDRESS;
@@ -94,14 +95,29 @@ int16_t sht3x_read(int32_t *temperature, int32_t *humidity) {
 
 int16_t sht3x_probe(void) {
     uint16_t status;
-    return sensirion_i2c_delayed_read_cmd(
-        SHT3X_ADDRESS, SHT3X_CMD_READ_STATUS_REG, SHT3X_CMD_DURATION_USEC,
-        &status, 1);
+    return sensirion_i2c_delayed_read_cmd(SHT3X_ADDRESS,
+                                          SHT3X_CMD_READ_STATUS_REG,
+                                          SHT3X_CMD_DURATION_USEC, &status, 1);
 }
 
 void sht3x_enable_low_power_mode(uint8_t enable_low_power_mode) {
     sht3x_cmd_measure =
         enable_low_power_mode ? SHT3X_CMD_MEASURE_LPM : SHT3X_CMD_MEASURE_HPM;
+}
+
+int16_t sht3x_read_serial(uint32_t *serial) {
+    int16_t ret;
+    union {
+        uint16_t words[SENSIRION_NUM_WORDS(*serial)];
+        uint32_t u32_value;
+    } buffer;
+
+    ret = sensirion_i2c_delayed_read_cmd(
+        SHT3X_ADDRESS, SHT3X_CMD_READ_SERIAL_ID, SHT3X_CMD_DURATION_USEC,
+        buffer.words, SENSIRION_NUM_WORDS(buffer.words));
+    SENSIRION_WORDS_TO_BYTES(buffer.words, SENSIRION_NUM_WORDS(buffer.words));
+    *serial = be32_to_cpu(buffer.u32_value);
+    return ret;
 }
 
 const char *sht3x_get_driver_version(void) {

@@ -123,6 +123,14 @@ int16_t shtc1_disable_sleep(uint8_t disable_sleep);
 void shtc1_enable_low_power_mode(uint8_t enable_low_power_mode);
 
 /**
+ * Read out the serial number
+ *
+ * @param serial    the address for the result of the serial number
+ * @return          0 if the command was successful, else an error code.
+ */
+int16_t shtc1_read_serial(uint32_t *serial);
+
+/**
  * Return the driver version
  *
  * @return Driver version string

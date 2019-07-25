@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * [`fixed`]    Fix warnings about sign conversion
  * [`fixed`]    Improved compatibility with C++ compilers
+ * [`added`]    Add functions to read out the serial id:
+                - `sht3x_read_serial_id(int32_t *serial_id)`
+                - `shtc1_read_serial_id(int32_t *serial_id)`
 
 ## [4.0.0] - 2019-07-01
 
