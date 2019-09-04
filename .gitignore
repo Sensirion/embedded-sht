@@ -1,7 +1,7 @@
 *.o
 /release
-/sht3x/sht3x_example_usage_hw_i2c
-/sht3x/sht3x_example_usage_sw_i2c
-/shtc1/shtc1_example_usage_hw_i2c
-/shtc1/shtc1_example_usage_sw_i2c
+/sht3x/sht3x_example_usage
+/sht3x/user_config.inc
+/shtc1/shtc1_example_usage
+/shtc1/user_config.inc
 /sht-common/sht_git_version.c

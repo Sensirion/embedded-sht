@@ -1,43 +1,14 @@
-sensirion_common_dir := ../embedded-common
-sht_common_dir := ../sht-common
-sw_i2c_dir := ${sensirion_common_dir}/sw_i2c
-hw_i2c_dir := ${sensirion_common_dir}/hw_i2c
+# See user_config.inc for build customization
+-include user_config.inc
+include default_config.inc
 
-CFLAGS := -Os -fstrict-aliasing -Wstrict-aliasing=1 -Wall -Wsign-conversion \
-          -I. -I${sensirion_common_dir} -I${sht_common_dir}
 
-sensirion_common_objects := sensirion_common.o
-sht_common_objects := sht_git_version.o
-sht3x_binaries := sht3x_example_usage_sw_i2c sht3x_example_usage_hw_i2c
-sht_binaries += ${sht3x_binaries}
+.PHONY: all clean
 
-sw_objects := ${sensirion_common_dir}/sw_i2c/sensirion_sw_i2c.o ${sensirion_common_dir}/sw_i2c/sensirion_sw_i2c_implementation.o
-hw_objects := ${sensirion_common_dir}/hw_i2c/sensirion_hw_i2c_implementation.o
-all_objects := ${sensirion_common_objects} ${sht_common_objects} ${hw_objects} ${sw_objects} sht3x.o
+all: sht3x_example_usage
 
-.PHONY: all
-
-all: ${sht_binaries}
-
-sht_git_version.o: ${sht_common_dir}/sht_git_version.c
-	$(CC) $(CFLAGS) -c -o $@ $^
-sensirion_common.o: ${sensirion_common_dir}/sensirion_common.c
-	$(CC) $(CFLAGS) -c -o $@ $^
-sensirion_sw_i2c_implementation.o: ${sw_i2c_dir}/sensirion_sw_i2c_implementation.c
-	$(CC) $(CFLAGS) -c -o $@ $^
-sensirion_hw_i2c_implementation.o: ${hw_i2c_dir}/sensirion_hw_i2c_implementation.c
-	$(CC) $(CFLAGS) -c -o $@ $^
-
-sensirion_sw_i2c.o: ${sw_i2c_dir}/sensirion_sw_i2c.c
-	$(CC) -I${sw_i2c_dir} $(CFLAGS) -c -o $@ $^
-
-sht3x.o: ${sensirion_common_dir}/sensirion_i2c.h ${sht_common_dir}/sht_git_version.c sht3x.h sht3x.c
-
-sht3x_example_usage_sw_i2c: ${sensirion_common_objects} ${sht_common_objects} ${sw_objects} sht3x.o
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LOADLIBES) $(LDLIBS) sht3x_example_usage.c
-
-sht3x_example_usage_hw_i2c: ${sensirion_common_objects} ${sht_common_objects} ${hw_objects} sht3x.o
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LOADLIBES) $(LDLIBS) sht3x_example_usage.c
+sht3x_example_usage: clean
+	$(CC) $(CFLAGS) -o $@ ${sht3x_sources} ${${CONFIG_I2C_TYPE}_sources} ${sht3x_dir}/sht3x_example_usage.c
 
 clean:
-	$(RM) ${all_objects} ${sht_binaries}
+	$(RM) sht3x_example_usage

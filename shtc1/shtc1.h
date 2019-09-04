@@ -55,6 +55,7 @@ extern "C" {
 #define STATUS_UNKNOWN_DEVICE (-3)
 #define STATUS_WAKEUP_FAILED (-4)
 #define STATUS_SLEEP_FAILED (-5)
+#define SHTC1_MEASUREMENT_DURATION_USEC 14400
 
 /**
  * Detects if a sensor is connected by reading out the ID register.

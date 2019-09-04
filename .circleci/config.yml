@@ -15,18 +15,69 @@ jobs:
           command: git submodule update --init
       - run: apt update
       - run: apt install -y zip
-      - run: make release
+      - run: make prepare
       - run: make
+      - run: make clean
+      - run: make release
       - run:
-          name: make driver
+          name: build stub release drivers
           command: |
-              cd release/sht3x && make && make clean && cd -
-              cd release/shtc1 && make && make clean && cd -
+              cd release/sht3x
+              make CONFIG_I2C_TYPE=hw_i2c
+              make CONFIG_I2C_TYPE=sw_i2c
+              make clean
+              cd -
+              cd release/shtc1
+              make CONFIG_I2C_TYPE=hw_i2c
+              make CONFIG_I2C_TYPE=sw_i2c
+              make clean
+              cd -
       - run:
-          name: Move zip files to artifacts directory
+          name: build Linux release drivers
+          command: |
+              cd release/sht3x
+              make CONFIG_I2C_TYPE=hw_i2c hw_i2c_impl_src=hw_i2c/sample-implementations/linux_user_space/sensirion_hw_i2c_implementation.c
+              make CONFIG_I2C_TYPE=sw_i2c sw_i2c_impl_src=sw_i2c/sample-implementations/linux_user_space/sensirion_sw_i2c_implementation.c
+              make clean
+              cd -
+              cd release/shtc1
+              make CONFIG_I2C_TYPE=hw_i2c hw_i2c_impl_src=hw_i2c/sample-implementations/linux_user_space/sensirion_hw_i2c_implementation.c
+              make CONFIG_I2C_TYPE=sw_i2c sw_i2c_impl_src=sw_i2c/sample-implementations/linux_user_space/sensirion_sw_i2c_implementation.c
+              make clean
+              cd -
+
+  deploy:
+    docker:
+      - image: gcc:5.5
+    steps:
+      - checkout
+      - run:
+          name: update common repo
+          command: git submodule update --init
+      - run: apt update
+      - run: apt install -y zip
+      - run: make release
+      - run:
+          name: Move zip files to artifact directory
           command: |
             mkdir -p /releases
             mv release/*.zip /releases/
-
-      - store_artifacts:
+      - store-artifacts:
           path: /releases
+
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+  deploy:
+    jobs:
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /^\d+\.\d+\.\d+$/

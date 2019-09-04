@@ -6,9 +6,11 @@ release_sample_projects=$(foreach s, $(sample-projects), release/$(s))
 
 .PHONY: FORCE all $(release_drivers) $(clean_drivers) style-check style-fix
 
-all: $(drivers)
+all: prepare $(drivers)
 
-$(drivers): sht-common/sht_git_version.c FORCE
+prepare: sht-common/sht_git_version.c
+
+$(drivers): prepare
 	cd $@ && $(MAKE) $(MFLAGS)
 
 sht-common/sht_git_version.c: FORCE
@@ -30,8 +32,10 @@ $(release_drivers): sht-common/sht_git_version.c
 	cp -r embedded-common/* "$${pkgdir}" && \
 	cp -r sht-common/* "$${pkgdir}" && \
 	cp -r $${driver}/* "$${pkgdir}" && \
-	perl -pi -e 's/^sensirion_common_dir :=.*$$/sensirion_common_dir := ./' "$${pkgdir}/Makefile" && \
-	perl -pi -e 's/^sht_common_dir :=.*$$/sht_common_dir := ./' "$${pkgdir}/Makefile" && \
+	echo 'sensirion_common_dir = .' >> $${pkgdir}/user_config.inc && \
+	echo 'sht_common_dir = .' >> $${pkgdir}/user_config.inc && \
+	echo 'sht3x_dir = .' >> $${pkgdir}/user_config.inc && \
+	echo 'shtc1_dir = .' >> $${pkgdir}/user_config.inc && \
 	cd "$${pkgdir}" && $(MAKE) $(MFLAGS) && $(MAKE) clean $(MFLAGS) && cd - && \
 	cd release && zip -r "$${pkgname}.zip" "$${pkgname}" && cd - && \
 	ln -sfn $${pkgname} $@

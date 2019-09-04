@@ -53,6 +53,7 @@ extern "C" {
 #define STATUS_ERR_BAD_DATA (-1)
 #define STATUS_CRC_FAIL (-2)
 #define STATUS_UNKNOWN_DEVICE (-3)
+#define SHT3X_MEASUREMENT_DURATION_USEC 15000
 
 /**
  * Detects if a sensor is connected by reading out the ID register.
