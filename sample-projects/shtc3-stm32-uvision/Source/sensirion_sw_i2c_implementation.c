@@ -36,36 +36,34 @@
 // I2C IO-Pins                         /* -- adapt the defines for your uC -- */
 
 // SDA on port B, bit 9
-#define SDA_LOW()  (GPIOB->BSRR = 0x02000000) // set SDA to low
-#define SDA_OPEN() (GPIOB->BSRR = 0x00000200) // set SDA to open-drain
-#define SDA_READ()   (GPIOB->IDR  & 0x0200)   // read SDA
+#define SDA_LOW() (GPIOB->BSRR = 0x02000000)   // set SDA to low
+#define SDA_OPEN() (GPIOB->BSRR = 0x00000200)  // set SDA to open-drain
+#define SDA_READ() (GPIOB->IDR & 0x0200)       // read SDA
 
 // SCL on port B, bit 8                /* -- adapt the defines for your uC -- */
-#define SCL_LOW()  (GPIOB->BSRR = 0x01000000) // set SCL to low
-#define SCL_OPEN() (GPIOB->BSRR = 0x00000100) // set SCL to open-drain
-#define SCL_READ()   (GPIOB->IDR  & 0x0100)   // read SCL
+#define SCL_LOW() (GPIOB->BSRR = 0x01000000)   // set SCL to low
+#define SCL_OPEN() (GPIOB->BSRR = 0x00000100)  // set SCL to open-drain
+#define SCL_READ() (GPIOB->IDR & 0x0100)       // read SCL
 
 /**
  * Initialize all hard- and software components that are needed to set the
  * SDA and SCL pins.
  */
-void sensirion_init_pins(void)
-{
-  RCC->APB2ENR |= 0x00000008;  // I/O port B clock enabled
+void sensirion_init_pins(void) {
+    RCC->APB2ENR |= 0x00000008;  // I/O port B clock enabled
 
-  SDA_OPEN();                  // I2C-bus idle mode SDA released
-  SCL_OPEN();                  // I2C-bus idle mode SCL released
+    SDA_OPEN();  // I2C-bus idle mode SDA released
+    SCL_OPEN();  // I2C-bus idle mode SCL released
 
-  // SDA on port B, bit 9
-  // SCL on port B, bit 8
-  GPIOB->CRH   &= 0xFFFFFF00;  // set open-drain output for SDA and SCL
-  GPIOB->CRH   |= 0x00000055;  //
+    // SDA on port B, bit 9
+    // SCL on port B, bit 8
+    GPIOB->CRH &= 0xFFFFFF00;  // set open-drain output for SDA and SCL
+    GPIOB->CRH |= 0x00000055;  //
 }
 
 void sensirion_release_pins(void) {
-  // do nothing
+    // do nothing
 }
-
 
 /**
  * Configure the SDA pin as an input. With an external pull-up resistor the line
@@ -128,10 +126,10 @@ uint8_t sensirion_SCL_read() {
  * @param useconds the sleep time in microseconds
  */
 void sensirion_sleep_usec(uint32_t useconds) {
-  for(uint32_t i = 0; i < useconds; i++) {
-    __nop();  // nop's may be added or removed for timing adjustment
-    __nop();
-    __nop();
-    __nop();
-  }
+    for (uint32_t i = 0; i < useconds; i++) {
+        __nop();  // nop's may be added or removed for timing adjustment
+        __nop();
+        __nop();
+        __nop();
+    }
 }

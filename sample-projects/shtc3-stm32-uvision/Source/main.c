@@ -29,17 +29,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #include "shtc1.h"
-#include <stdbool.h>
 #include "system.h"
+#include <stdbool.h>
 
 static void led_init(void);
 static void led_blue(bool on);
 static void led_green(bool on);
 
-#define SCL_LOW()  (GPIOB->BSRR = 0x01000000) // set SCL to low
-#define SCL_OPEN() (GPIOB->BSRR = 0x00000100) // set SCL to open-drain
+#define SCL_LOW() (GPIOB->BSRR = 0x01000000)   // set SCL to low
+#define SCL_OPEN() (GPIOB->BSRR = 0x00000100)  // set SCL to open-drain
 
 int main(void) {
     /* Initialize the i2c bus for the current platform */
@@ -81,30 +80,27 @@ int main(void) {
 }
 
 /* -- adapt this code for your platform -- */
-static void led_init(void)
-{
-  RCC->APB2ENR |= 0x00000010;  /* I/O port C clock enabled */
-  GPIOC->CRH   &= 0xFFFFFF00;  /* set general purpose output mode for LEDs */
-  GPIOC->CRH   |= 0x00000011;
-  GPIOC->BSRR   = 0x03000000;  /* LEDs off */
+static void led_init(void) {
+    RCC->APB2ENR |= 0x00000010; /* I/O port C clock enabled */
+    GPIOC->CRH &= 0xFFFFFF00;   /* set general purpose output mode for LEDs */
+    GPIOC->CRH |= 0x00000011;
+    GPIOC->BSRR = 0x03000000; /* LEDs off */
 }
 
 /* -- adapt this code for your platform -- */
-static void led_blue(bool on)
-{
-  if(on) {
-    GPIOC->BSRR = 0x00000100;
-  } else {
-    GPIOC->BSRR = 0x01000000;
-  }
+static void led_blue(bool on) {
+    if (on) {
+        GPIOC->BSRR = 0x00000100;
+    } else {
+        GPIOC->BSRR = 0x01000000;
+    }
 }
 
 /* -- adapt this code for your platform -- */
-static void led_green(bool on)
-{
-  if(on) {
-    GPIOC->BSRR = 0x00000200;
-  } else {
-    GPIOC->BSRR = 0x02000000;
-  }
+static void led_green(bool on) {
+    if (on) {
+        GPIOC->BSRR = 0x00000200;
+    } else {
+        GPIOC->BSRR = 0x02000000;
+    }
 }
