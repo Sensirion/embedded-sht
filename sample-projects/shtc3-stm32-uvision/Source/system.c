@@ -14,5 +14,5 @@
 #include "system.h"
 
 //------------------------------------------------------------------------------
-void SystemInit(void){
+void SystemInit(void) {
 }
