@@ -1,0 +1,19 @@
+stages:
+  - build
+
+trigger_testbed:
+  stage: build
+  image:
+    name: registry.gitlab.sensirion.lokal/sensirion/docker/docker-ubuntu:18.04-1.2.0
+  tags:
+    - docker
+    - linux
+  script:
+  - >
+    curl
+    --request POST
+    --form ref=master
+    --form token=$CI_JOB_TOKEN
+    --form "variables[DRIVER_NAMES]=embedded-sht"
+    --form "variables[DRIVER_BRANCH]=$CI_COMMIT_REF_NAME"
+    https://gitlab/api/v4/projects/801/trigger/pipeline
