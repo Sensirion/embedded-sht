@@ -53,7 +53,6 @@
 #define SHTC1_CMD_MEASURE_HPM 0x7866
 #define SHTC1_CMD_MEASURE_LPM 0x609C
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
-static const uint16_t SHTC1_CMD_READ_ID_REG = 0xefc8;
 static const uint16_t SHTC1_CMD_DURATION_USEC = 1000;
 
 static const uint16_t SHTC3_CMD_SLEEP = 0xB098;
@@ -63,11 +62,6 @@ static const uint8_t SHTC1_ADDRESS = SHT_ADDRESS;
 #else
 static const uint8_t SHTC1_ADDRESS = 0x70;
 #endif
-
-static const uint16_t SHTC1_PRODUCT_CODE_MASK = 0x001F;
-static const uint16_t SHTC1_PRODUCT_CODE = 0x0007;
-static const uint16_t SHTC3_PRODUCT_CODE_MASK = 0x083F;
-static const uint16_t SHTC3_PRODUCT_CODE = 0x0807;
 
 static uint16_t shtc1_cmd_measure = SHTC1_CMD_MEASURE_HPM;
 
