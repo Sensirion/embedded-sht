@@ -71,78 +71,28 @@ static const uint16_t SHTC3_PRODUCT_CODE = 0x0807;
 
 static uint16_t shtc1_cmd_measure = SHTC1_CMD_MEASURE_HPM;
 
-/**
- * PM_SLEEP is equivalent to
- * if (ret) {
- *     (void)shtc1_sleep(); // attempting to sleep but ignore return value
- * } else {
- *     (ret) = shtc1_sleep();
- * }, (ret)
- */
-#define PM_SLEEP(ret) ((ret) ? (shtc1_sleep(), (ret)) : ((ret) = shtc1_sleep()))
-
-/**
- * PM_WAKE wakes the sensor if the command is successful (ret == 0).
- * The macro code is equivalent to:
- * (ret) = shtc1_wakeup();
- * if ((ret) == 0) {
- *     (ret) = (cmd);
- *     if ((ret) != 0)
- *          shtc1_sleep(); // cmd failed, go back to sleep
- * }, (ret)
- */
-#define PM_WAKE(ret, cmd)                                                      \
-    (((ret) = shtc1_wakeup())                                                  \
-         ? (ret) /* ret = STATUS_WAKEUP_FAILED */                              \
-         : (((ret) = (cmd))                                                    \
-            ? shtc1_sleep(),                                                   \
-            (ret) /* ret = cmd failed (ret != 0),                              \
-                     sensor potentially asleep */                              \
-            : (ret)) /* ret = STATUS_OK and sensor is awake */)
-
-static uint8_t supports_sleep = 1;
-static uint8_t sleep_enabled = 1;
-
-static int16_t shtc1_sleep() {
-    int16_t ret;
-
-    if (!supports_sleep || !sleep_enabled)
-        return STATUS_OK;
-
-    ret = sensirion_i2c_write_cmd(SHTC1_ADDRESS, SHTC3_CMD_SLEEP);
-    if (ret != STATUS_OK)
-        return STATUS_SLEEP_FAILED;
-    return STATUS_OK;
+int16_t shtc1_sleep() {
+    return sensirion_i2c_write_cmd(SHTC1_ADDRESS, SHTC3_CMD_SLEEP);
 }
 
-static int16_t shtc1_wakeup() {
-    int16_t ret;
-
-    if (!supports_sleep || !sleep_enabled)
-        return STATUS_OK;
-
-    ret = sensirion_i2c_write_cmd(SHTC1_ADDRESS, SHTC3_CMD_WAKEUP);
-    if (ret != STATUS_OK)
-        return STATUS_WAKEUP_FAILED;
-    return STATUS_OK;
+int16_t shtc1_wake_up() {
+    return sensirion_i2c_write_cmd(SHTC1_ADDRESS, SHTC3_CMD_WAKEUP);
 }
 
 int16_t shtc1_measure_blocking_read(int32_t *temperature, int32_t *humidity) {
     int16_t ret;
 
-    PM_WAKE(ret, shtc1_measure());
+    ret = shtc1_measure();
+    if (ret)
+        return ret;
 #if !defined(USE_SENSIRION_CLOCK_STRETCHING) || !USE_SENSIRION_CLOCK_STRETCHING
     sensirion_sleep_usec(SHTC1_MEASUREMENT_DURATION_USEC);
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
-    ret = shtc1_read(temperature, humidity);
-    return PM_SLEEP(ret);
+    return shtc1_read(temperature, humidity);
 }
 
 int16_t shtc1_measure(void) {
-    int16_t ret;
-
-    return PM_WAKE(ret,
-                   sensirion_i2c_write_cmd(SHTC1_ADDRESS, shtc1_cmd_measure));
+    return sensirion_i2c_write_cmd(SHTC1_ADDRESS, shtc1_cmd_measure);
 }
 
 int16_t shtc1_read(int32_t *temperature, int32_t *humidity) {
@@ -158,43 +108,14 @@ int16_t shtc1_read(int32_t *temperature, int32_t *humidity) {
     *temperature = ((21875 * (int32_t)words[0]) >> 13) - 45000;
     *humidity = ((12500 * (int32_t)words[1]) >> 13);
 
-    return PM_SLEEP(ret);
+    return ret;
 }
 
 int16_t shtc1_probe(void) {
-    uint16_t id;
-    int16_t ret;
+    uint32_t serial;
 
-    supports_sleep = 1;
-    sleep_enabled = 1;
-
-    (void)shtc1_wakeup(); /* Try to wake up the sensor, ignore return value */
-    ret = sensirion_i2c_delayed_read_cmd(SHTC1_ADDRESS, SHTC1_CMD_READ_ID_REG,
-                                         SHTC1_CMD_DURATION_USEC, &id, 1);
-    if (ret)
-        return ret;
-
-    if ((id & SHTC3_PRODUCT_CODE_MASK) == SHTC3_PRODUCT_CODE)
-        return shtc1_sleep();
-
-    if ((id & SHTC1_PRODUCT_CODE_MASK) == SHTC1_PRODUCT_CODE) {
-        supports_sleep = 0;
-        return STATUS_OK;
-    }
-
-    return STATUS_UNKNOWN_DEVICE;
-}
-
-int16_t shtc1_disable_sleep(uint8_t disable_sleep) {
-    if (!supports_sleep)
-        return STATUS_FAIL;
-
-    sleep_enabled = !disable_sleep;
-
-    if (disable_sleep)
-        return shtc1_wakeup();
-
-    return shtc1_sleep();
+    (void)shtc1_wake_up(); /* Try to wake up the sensor, ignore return value */
+    return shtc1_read_serial(&serial);
 }
 
 void shtc1_enable_low_power_mode(uint8_t enable_low_power_mode) {
@@ -207,9 +128,8 @@ int16_t shtc1_read_serial(uint32_t *serial) {
     const uint16_t tx_words[] = {0x007B};
     uint16_t serial_words[SENSIRION_NUM_WORDS(*serial)];
 
-    PM_WAKE(ret,
-            sensirion_i2c_write_cmd_with_args(SHTC1_ADDRESS, 0xC595, tx_words,
-                                              SENSIRION_NUM_WORDS(tx_words)));
+    ret = sensirion_i2c_write_cmd_with_args(SHTC1_ADDRESS, 0xC595, tx_words,
+                                            SENSIRION_NUM_WORDS(tx_words));
     if (ret)
         return ret;
 
@@ -218,15 +138,15 @@ int16_t shtc1_read_serial(uint32_t *serial) {
     ret = sensirion_i2c_delayed_read_cmd(
         SHTC1_ADDRESS, 0xC7F7, SHTC1_CMD_DURATION_USEC, &serial_words[0], 1);
     if (ret)
-        return PM_SLEEP(ret);
+        return ret;
 
     ret = sensirion_i2c_delayed_read_cmd(
         SHTC1_ADDRESS, 0xC7F7, SHTC1_CMD_DURATION_USEC, &serial_words[1], 1);
     if (ret)
-        return PM_SLEEP(ret);
+        return ret;
 
     *serial = ((uint32_t)serial_words[0] << 16) | serial_words[1];
-    return PM_SLEEP(ret);
+    return ret;
 }
 
 const char *shtc1_get_driver_version(void) {
