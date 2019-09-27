@@ -5,6 +5,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+ * [`changed`]  Replace SHTC3's auto-sleeping with manual sleeping for better
+                control of the sensor and easier-to-read code.
+                - Adds the functions `shtc1_sleep()` and `shtc1_wake_up()`
+                  Despite the name, the functions only work on the SHTC3.
+                - Remove `shtc1_disable_sleeping()`.
+
 ## [4.1.0] - 2019-09-13
 
  * [`fixed`]    Fix warnings about sign conversion

@@ -53,8 +53,6 @@ extern "C" {
 #define STATUS_ERR_BAD_DATA (-1)
 #define STATUS_CRC_FAIL (-2)
 #define STATUS_UNKNOWN_DEVICE (-3)
-#define STATUS_WAKEUP_FAILED (-4)
-#define STATUS_SLEEP_FAILED (-5)
 #define SHTC1_MEASUREMENT_DURATION_USEC 14400
 
 /**
@@ -106,15 +104,58 @@ int16_t shtc1_measure(void);
 int16_t shtc1_read(int32_t *temperature, int32_t *humidity);
 
 /**
- * Enable or disable the SHT's sleep mode between measurements, if supported.
- * Sleep mode is enabled by default when supported.
+ * Send the sensor to sleep, if supported.
  *
- * @param disable_sleep 1 (or anything other than 0) to disable sleeping between
- *                      measurements, 0 to enable sleeping.
- * @return              0 if the command was successful,
- *                      1 if an error occured or if sleep mode is not supported
+ * Note: DESPITE THE NAME, THIS COMMAND IS ONLY AVAILABLE FOR THE SHTC3
+ *
+ * Usage:
+ * ```
+ * int16_t ret;
+ * int32_t temperature, humidity;
+ * ret = shtc1_wake_up();
+ * if (ret) {
+ *     // error waking up
+ * }
+ * ret = shtc1_measure_blocking_read(&temperature, &humidity);
+ * if (ret) {
+ *     // error measuring
+ * }
+ * ret = shtc1_sleep();
+ * if (ret) {
+ *     // error sending sensor to sleep
+ * }
+ * ```
+ *
+ * @return  0 if the command was successful, else an error code.
  */
-int16_t shtc1_disable_sleep(uint8_t disable_sleep);
+int16_t shtc1_sleep();
+
+/**
+ * Wake the sensor from sleep
+ *
+ * Note: DESPITE THE NAME, THIS COMMAND IS ONLY AVAILABLE FOR THE SHTC3
+ *
+ * Usage:
+ * ```
+ * int16_t ret;
+ * int32_t temperature, humidity;
+ * ret = shtc1_wake_up();
+ * if (ret) {
+ *     // error waking up
+ * }
+ * ret = shtc1_measure_blocking_read(&temperature, &humidity);
+ * if (ret) {
+ *     // error measuring
+ * }
+ * ret = shtc1_sleep();
+ * if (ret) {
+ *     // error sending sensor to sleep
+ * }
+ * ```
+ *
+ * @return  0 if the command was successful, else an error code.
+ */
+int16_t shtc1_wake_up();
 
 /**
  * Enable or disable the SHT's low power mode
