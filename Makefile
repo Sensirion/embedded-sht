@@ -32,10 +32,10 @@ $(release_drivers): sht-common/sht_git_version.c
 	cp -r embedded-common/* "$${pkgdir}" && \
 	cp -r sht-common/* "$${pkgdir}" && \
 	cp -r $${driver}/* "$${pkgdir}" && \
+	cp CHANGELOG.md LICENSE "$${pkgdir}" && \
 	echo 'sensirion_common_dir = .' >> $${pkgdir}/user_config.inc && \
 	echo 'sht_common_dir = .' >> $${pkgdir}/user_config.inc && \
-	echo 'sht3x_dir = .' >> $${pkgdir}/user_config.inc && \
-	echo 'shtc1_dir = .' >> $${pkgdir}/user_config.inc && \
+	echo "$${driver}_dir = ." >> $${pkgdir}/user_config.inc && \
 	cd "$${pkgdir}" && $(MAKE) $(MFLAGS) && $(MAKE) clean $(MFLAGS) && cd - && \
 	cd release && zip -r "$${pkgname}.zip" "$${pkgname}" && cd - && \
 	ln -sfn $${pkgname} $@
