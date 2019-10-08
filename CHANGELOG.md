@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
                 - Adds the functions `shtc1_sleep()` and `shtc1_wake_up()`
                   Despite the name, the functions only work on the SHTC3.
                 - Remove `shtc1_disable_sleeping()`.
+ * [`removed`]  Remove the `AUTHORS` file from the driver and the
+                `embedded-common` submodule, as it adds more noise than benefit.
+                The contributors can be found in the git log.
 
 ## [4.1.0] - 2019-09-13
 
