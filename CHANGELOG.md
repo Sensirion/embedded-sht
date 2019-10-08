@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * [`removed`]  Remove the `AUTHORS` file from the driver and the
                 `embedded-common` submodule, as it adds more noise than benefit.
                 The contributors can be found in the git log.
+ * [`fixed`]    Copy correct `CHANGELOG.md` and `LICENSE` files to target
+                locations when running the `release` target of the driver's root
+                Makefile.
 
 ## [4.1.0] - 2019-09-13
 
