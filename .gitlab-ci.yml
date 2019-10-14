@@ -16,4 +16,5 @@ trigger_testbed:
     --form token=$CI_JOB_TOKEN
     --form "variables[DRIVER_NAMES]=embedded-sht"
     --form "variables[DRIVER_BRANCH]=$CI_COMMIT_REF_NAME"
+    --form "variables[DRIVER_COMMIT_SHA]=$CI_COMMIT_SHA"
     https://gitlab/api/v4/projects/801/trigger/pipeline
