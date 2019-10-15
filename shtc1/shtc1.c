@@ -65,11 +65,11 @@ static const uint8_t SHTC1_ADDRESS = 0x70;
 
 static uint16_t shtc1_cmd_measure = SHTC1_CMD_MEASURE_HPM;
 
-int16_t shtc1_sleep() {
+int16_t shtc1_sleep(void) {
     return sensirion_i2c_write_cmd(SHTC1_ADDRESS, SHTC3_CMD_SLEEP);
 }
 
-int16_t shtc1_wake_up() {
+int16_t shtc1_wake_up(void) {
     return sensirion_i2c_write_cmd(SHTC1_ADDRESS, SHTC3_CMD_WAKEUP);
 }
 
