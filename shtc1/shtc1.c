@@ -47,51 +47,51 @@
 
 /* all measurement commands return T (CRC) RH (CRC) */
 #if USE_SENSIRION_CLOCK_STRETCHING
-#define SHTC1_CMD_MEASURE_HPM 0x7CA2
-#define SHTC1_CMD_MEASURE_LPM 0x6458
+#define SHTCX_CMD_MEASURE_HPM 0x7CA2
+#define SHTCX_CMD_MEASURE_LPM 0x6458
 #else /* USE_SENSIRION_CLOCK_STRETCHING */
-#define SHTC1_CMD_MEASURE_HPM 0x7866
-#define SHTC1_CMD_MEASURE_LPM 0x609C
+#define SHTCX_CMD_MEASURE_HPM 0x7866
+#define SHTCX_CMD_MEASURE_LPM 0x609C
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
-static const uint16_t SHTC1_CMD_DURATION_USEC = 1000;
+static const uint16_t SHTCX_CMD_DURATION_USEC = 1000;
 
 static const uint16_t SHTC3_CMD_SLEEP = 0xB098;
 static const uint16_t SHTC3_CMD_WAKEUP = 0x3517;
 #ifdef SHT_ADDRESS
-static const uint8_t SHTC1_ADDRESS = SHT_ADDRESS;
+static const uint8_t SHTCX_ADDRESS = SHT_ADDRESS;
 #else
-static const uint8_t SHTC1_ADDRESS = 0x70;
+static const uint8_t SHTCX_ADDRESS = 0x70;
 #endif
 
-static uint16_t shtc1_cmd_measure = SHTC1_CMD_MEASURE_HPM;
+static uint16_t shtcx_cmd_measure = SHTCX_CMD_MEASURE_HPM;
 
-int16_t shtc1_sleep(void) {
-    return sensirion_i2c_write_cmd(SHTC1_ADDRESS, SHTC3_CMD_SLEEP);
+int16_t shtc3_sleep(void) {
+    return sensirion_i2c_write_cmd(SHTCX_ADDRESS, SHTC3_CMD_SLEEP);
 }
 
-int16_t shtc1_wake_up(void) {
-    return sensirion_i2c_write_cmd(SHTC1_ADDRESS, SHTC3_CMD_WAKEUP);
+int16_t shtc3_wake_up(void) {
+    return sensirion_i2c_write_cmd(SHTCX_ADDRESS, SHTC3_CMD_WAKEUP);
 }
 
-int16_t shtc1_measure_blocking_read(int32_t *temperature, int32_t *humidity) {
+int16_t shtcx_measure_blocking_read(int32_t *temperature, int32_t *humidity) {
     int16_t ret;
 
-    ret = shtc1_measure();
+    ret = shtcx_measure();
     if (ret)
         return ret;
 #if !defined(USE_SENSIRION_CLOCK_STRETCHING) || !USE_SENSIRION_CLOCK_STRETCHING
-    sensirion_sleep_usec(SHTC1_MEASUREMENT_DURATION_USEC);
+    sensirion_sleep_usec(SHTCX_MEASUREMENT_DURATION_USEC);
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
-    return shtc1_read(temperature, humidity);
+    return shtcx_read(temperature, humidity);
 }
 
-int16_t shtc1_measure(void) {
-    return sensirion_i2c_write_cmd(SHTC1_ADDRESS, shtc1_cmd_measure);
+int16_t shtcx_measure(void) {
+    return sensirion_i2c_write_cmd(SHTCX_ADDRESS, shtcx_cmd_measure);
 }
 
-int16_t shtc1_read(int32_t *temperature, int32_t *humidity) {
+int16_t shtcx_read(int32_t *temperature, int32_t *humidity) {
     uint16_t words[2];
-    int16_t ret = sensirion_i2c_read_words(SHTC1_ADDRESS, words,
+    int16_t ret = sensirion_i2c_read_words(SHTCX_ADDRESS, words,
                                            SENSIRION_NUM_WORDS(words));
     /**
      * formulas for conversion of the sensor signals, optimized for fixed point
@@ -105,37 +105,37 @@ int16_t shtc1_read(int32_t *temperature, int32_t *humidity) {
     return ret;
 }
 
-int16_t shtc1_probe(void) {
+int16_t shtcx_probe(void) {
     uint32_t serial;
 
-    (void)shtc1_wake_up(); /* Try to wake up the sensor, ignore return value */
-    return shtc1_read_serial(&serial);
+    (void)shtc3_wake_up(); /* Try to wake up the sensor, ignore return value */
+    return shtcx_read_serial(&serial);
 }
 
-void shtc1_enable_low_power_mode(uint8_t enable_low_power_mode) {
-    shtc1_cmd_measure =
-        enable_low_power_mode ? SHTC1_CMD_MEASURE_LPM : SHTC1_CMD_MEASURE_HPM;
+void shtcx_enable_low_power_mode(uint8_t enable_low_power_mode) {
+    shtcx_cmd_measure =
+        enable_low_power_mode ? SHTCX_CMD_MEASURE_LPM : SHTCX_CMD_MEASURE_HPM;
 }
 
-int16_t shtc1_read_serial(uint32_t *serial) {
+int16_t shtcx_read_serial(uint32_t *serial) {
     int16_t ret;
     const uint16_t tx_words[] = {0x007B};
     uint16_t serial_words[SENSIRION_NUM_WORDS(*serial)];
 
-    ret = sensirion_i2c_write_cmd_with_args(SHTC1_ADDRESS, 0xC595, tx_words,
+    ret = sensirion_i2c_write_cmd_with_args(SHTCX_ADDRESS, 0xC595, tx_words,
                                             SENSIRION_NUM_WORDS(tx_words));
     if (ret)
         return ret;
 
-    sensirion_sleep_usec(SHTC1_CMD_DURATION_USEC);
+    sensirion_sleep_usec(SHTCX_CMD_DURATION_USEC);
 
     ret = sensirion_i2c_delayed_read_cmd(
-        SHTC1_ADDRESS, 0xC7F7, SHTC1_CMD_DURATION_USEC, &serial_words[0], 1);
+        SHTCX_ADDRESS, 0xC7F7, SHTCX_CMD_DURATION_USEC, &serial_words[0], 1);
     if (ret)
         return ret;
 
     ret = sensirion_i2c_delayed_read_cmd(
-        SHTC1_ADDRESS, 0xC7F7, SHTC1_CMD_DURATION_USEC, &serial_words[1], 1);
+        SHTCX_ADDRESS, 0xC7F7, SHTCX_CMD_DURATION_USEC, &serial_words[1], 1);
     if (ret)
         return ret;
 
@@ -143,10 +143,10 @@ int16_t shtc1_read_serial(uint32_t *serial) {
     return ret;
 }
 
-const char *shtc1_get_driver_version(void) {
+const char *shtcx_get_driver_version(void) {
     return SHT_DRV_VERSION_STR;
 }
 
-uint8_t shtc1_get_configured_address(void) {
-    return SHTC1_ADDRESS;
+uint8_t shtcx_get_configured_address(void) {
+    return SHTCX_ADDRESS;
 }

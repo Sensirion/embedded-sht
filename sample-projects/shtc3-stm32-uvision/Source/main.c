@@ -49,7 +49,7 @@ int main(void) {
     /* Busy loop for initialization, because the main loop does not work without
      * a sensor.
      */
-    while (shtc1_probe() != STATUS_OK) {
+    while (shtcx_probe() != STATUS_OK) {
         /* Blink LED as long as probing fails */
         led_green(true);
         sensirion_sleep_usec(100000);
@@ -65,7 +65,7 @@ int main(void) {
         /* Measure temperature and relative humidity and store into variables
          * temperature, humidity (each output multiplied by 1000).
          */
-        int8_t ret = shtc1_measure_blocking_read(&temperature, &humidity);
+        int8_t ret = shtcx_measure_blocking_read(&temperature, &humidity);
         if (ret == STATUS_OK) {
             led_green(true);
             /* if the Relative Humidity is over 50% light up the blue LED */

@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
                 Makefile.
  * [`fixed`]    Fix uVision compilation warnings (#1295-D: Deprecated
                 declaration of shtc1_sleep - give arg types)
+ * [`changed`]  Change the function name prefix to `shtcx_` for all functions
+                that work with all sensors of the SHTC1 family (SHTC1, SHTW2,
+                SHTC3) and to `shtc3_` for all functions that only work with an
+                SHTC3 sensor.
 
 ## [4.1.0] - 2019-09-13
 

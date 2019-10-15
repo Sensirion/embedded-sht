@@ -38,8 +38,8 @@
  * interface. It supports measurements without clock stretching only.
  */
 
-#ifndef SHTC1_H
-#define SHTC1_H
+#ifndef SHTCX_H
+#define SHTCX_H
 
 #include "sensirion_arch_config.h"
 #include "sensirion_i2c.h"
@@ -53,7 +53,7 @@ extern "C" {
 #define STATUS_ERR_BAD_DATA (-1)
 #define STATUS_CRC_FAIL (-2)
 #define STATUS_UNKNOWN_DEVICE (-3)
-#define SHTC1_MEASUREMENT_DURATION_USEC 14400
+#define SHTCX_MEASUREMENT_DURATION_USEC 14400
 
 /**
  * Detects if a sensor is connected by reading out the ID register.
@@ -62,7 +62,7 @@ extern "C" {
  *
  * @return 0 if a sensor was detected
  */
-int16_t shtc1_probe(void);
+int16_t shtcx_probe(void);
 
 /**
  * Starts a measurement and then reads out the results. This function blocks
@@ -77,20 +77,20 @@ int16_t shtc1_probe(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int16_t shtc1_measure_blocking_read(int32_t *temperature, int32_t *humidity);
+int16_t shtcx_measure_blocking_read(int32_t *temperature, int32_t *humidity);
 
 /**
- * Starts a measurement in high precision mode. Use shtc1_read() to read out the
+ * Starts a measurement in high precision mode. Use shtcx_read() to read out the
  * values, once the measurement is done. The duration of the measurement depends
  * on the sensor in use, please consult the datasheet.
  *
  * @return     0 if the command was successful, else an error code.
  */
-int16_t shtc1_measure(void);
+int16_t shtcx_measure(void);
 
 /**
  * Reads out the results of a measurement that was previously started by
- * shtc1_measure(). If the measurement is still in progress, this function
+ * shtcx_measure(). If the measurement is still in progress, this function
  * returns an error.
  * Temperature is returned in [degree Celsius], multiplied by 1000,
  * and relative humidity in [percent relative humidity], multiplied by 1000.
@@ -101,26 +101,26 @@ int16_t shtc1_measure(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int16_t shtc1_read(int32_t *temperature, int32_t *humidity);
+int16_t shtcx_read(int32_t *temperature, int32_t *humidity);
 
 /**
  * Send the sensor to sleep, if supported.
  *
- * Note: DESPITE THE NAME, THIS COMMAND IS ONLY AVAILABLE FOR THE SHTC3
+ * As the name suggests, this command is only available for the SHTC3
  *
  * Usage:
  * ```
  * int16_t ret;
  * int32_t temperature, humidity;
- * ret = shtc1_wake_up();
+ * ret = shtc3_wake_up();
  * if (ret) {
  *     // error waking up
  * }
- * ret = shtc1_measure_blocking_read(&temperature, &humidity);
+ * ret = shtcx_measure_blocking_read(&temperature, &humidity);
  * if (ret) {
  *     // error measuring
  * }
- * ret = shtc1_sleep();
+ * ret = shtc3_sleep();
  * if (ret) {
  *     // error sending sensor to sleep
  * }
@@ -128,26 +128,26 @@ int16_t shtc1_read(int32_t *temperature, int32_t *humidity);
  *
  * @return  0 if the command was successful, else an error code.
  */
-int16_t shtc1_sleep(void);
+int16_t shtc3_sleep(void);
 
 /**
  * Wake the sensor from sleep
  *
- * Note: DESPITE THE NAME, THIS COMMAND IS ONLY AVAILABLE FOR THE SHTC3
+ * As the name suggests, this command is only available for the SHTC3
  *
  * Usage:
  * ```
  * int16_t ret;
  * int32_t temperature, humidity;
- * ret = shtc1_wake_up();
+ * ret = shtc3_wake_up();
  * if (ret) {
  *     // error waking up
  * }
- * ret = shtc1_measure_blocking_read(&temperature, &humidity);
+ * ret = shtcx_measure_blocking_read(&temperature, &humidity);
  * if (ret) {
  *     // error measuring
  * }
- * ret = shtc1_sleep();
+ * ret = shtc3_sleep();
  * if (ret) {
  *     // error sending sensor to sleep
  * }
@@ -155,14 +155,14 @@ int16_t shtc1_sleep(void);
  *
  * @return  0 if the command was successful, else an error code.
  */
-int16_t shtc1_wake_up(void);
+int16_t shtc3_wake_up(void);
 
 /**
  * Enable or disable the SHT's low power mode
  *
  * @param enable_low_power_mode 1 to enable low power mode, 0 to disable
  */
-void shtc1_enable_low_power_mode(uint8_t enable_low_power_mode);
+void shtcx_enable_low_power_mode(uint8_t enable_low_power_mode);
 
 /**
  * Read out the serial number
@@ -170,24 +170,24 @@ void shtc1_enable_low_power_mode(uint8_t enable_low_power_mode);
  * @param serial    the address for the result of the serial number
  * @return          0 if the command was successful, else an error code.
  */
-int16_t shtc1_read_serial(uint32_t *serial);
+int16_t shtcx_read_serial(uint32_t *serial);
 
 /**
  * Return the driver version
  *
  * @return Driver version string
  */
-const char *shtc1_get_driver_version(void);
+const char *shtcx_get_driver_version(void);
 
 /**
  * Returns the configured SHT3x address.
  *
- * @return SHT3x_ADDRESS
+ * @return SHTCX_ADDRESS
  */
-uint8_t shtc1_get_configured_address(void);
+uint8_t shtcx_get_configured_address(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* SHTC1_H */
+#endif /* SHTCX_H */

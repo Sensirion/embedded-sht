@@ -46,7 +46,7 @@ int main(void) {
     /* Busy loop for initialization, because the main loop does not work without
      * a sensor.
      */
-    while (shtc1_probe() != STATUS_OK) {
+    while (shtcx_probe() != STATUS_OK) {
         /* printf("SHT sensor probing failed\n"); */
     }
     /* printf("SHT sensor probing successful\n"); */
@@ -56,7 +56,7 @@ int main(void) {
         /* Measure temperature and relative humidity and store into variables
          * temperature, humidity (each output multiplied by 1000).
          */
-        int8_t ret = shtc1_measure_blocking_read(&temperature, &humidity);
+        int8_t ret = shtcx_measure_blocking_read(&temperature, &humidity);
         if (ret == STATUS_OK) {
             /* printf("measured temperature: %0.2f degreeCelsius, "
                       "measured humidity: %0.2f percentRH\n",
