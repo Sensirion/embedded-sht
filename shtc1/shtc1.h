@@ -128,7 +128,7 @@ int16_t shtc1_read(int32_t *temperature, int32_t *humidity);
  *
  * @return  0 if the command was successful, else an error code.
  */
-int16_t shtc1_sleep();
+int16_t shtc1_sleep(void);
 
 /**
  * Wake the sensor from sleep
@@ -155,7 +155,7 @@ int16_t shtc1_sleep();
  *
  * @return  0 if the command was successful, else an error code.
  */
-int16_t shtc1_wake_up();
+int16_t shtc1_wake_up(void);
 
 /**
  * Enable or disable the SHT's low power mode

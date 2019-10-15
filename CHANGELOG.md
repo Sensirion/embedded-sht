@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * [`fixed`]    Copy correct `CHANGELOG.md` and `LICENSE` files to target
                 locations when running the `release` target of the driver's root
                 Makefile.
+ * [`fixed`]    Fix uVision compilation warnings (#1295-D: Deprecated
+                declaration of shtc1_sleep - give arg types)
 
 ## [4.1.0] - 2019-09-13
 

@@ -73,7 +73,7 @@ int16_t sht3x_measure_blocking_read(int32_t *temperature, int32_t *humidity) {
     return ret;
 }
 
-int16_t sht3x_measure() {
+int16_t sht3x_measure(void) {
     return sensirion_i2c_write_cmd(SHT3X_ADDRESS, sht3x_cmd_measure);
 }
 
