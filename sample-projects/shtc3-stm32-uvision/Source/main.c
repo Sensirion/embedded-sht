@@ -37,9 +37,6 @@ static void led_init(void);
 static void led_blue(bool on);
 static void led_green(bool on);
 
-#define SCL_LOW() (GPIOB->BSRR = 0x01000000)   // set SCL to low
-#define SCL_OPEN() (GPIOB->BSRR = 0x00000100)  // set SCL to open-drain
-
 int main(void) {
     /* Initialize the i2c bus for the current platform */
     sensirion_i2c_init();
