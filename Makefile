@@ -1,4 +1,4 @@
-drivers=sht3x shtc1
+drivers=sht3x sht4x shtc1
 sample-projects=shtc3-stm32-uvision
 clean_drivers=$(foreach d, $(drivers), clean_$(d))
 release_drivers=$(foreach d, $(drivers), release/$(d))
