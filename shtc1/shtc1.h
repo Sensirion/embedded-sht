@@ -180,9 +180,9 @@ int16_t shtc1_read_serial(uint32_t *serial);
 const char *shtc1_get_driver_version(void);
 
 /**
- * Returns the configured SHT3x address.
+ * Returns the configured SHT address.
  *
- * @return SHT3x_ADDRESS
+ * @return The configured i2c address
  */
 uint8_t shtc1_get_configured_address(void);
 
