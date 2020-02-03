@@ -15,10 +15,10 @@ cloning the repository.
 ```
 
 ## Repository content
-* embedded-common (submodule repository for the common embedded driver HAL)
-* sht-common (common files for all SHTxx drivers)
-* sht3x (SHT3x/SHT8x driver related)
-* shtc1 (SHTC3/SHTC1/SHTW1/SHTW2 driver related)
+* `embedded-common` submodule repository for the common embedded driver HAL
+* `sht-common` common files for all SHTxx drivers, humidity conversion functions
+* `sht3x` SHT3x/SHT8x driver related
+* `shtc1` SHTC3/SHTC1/SHTW1/SHTW2 driver related
 
 ## Collecting resources
 ```
@@ -32,7 +32,7 @@ ready to build your driver for your platform.
 You only need to touch the following files:
 
 * `sensirion_arch_config.h` (architecture specifics, you need to specify
-the integer sizes)
+  the integer sizes)
 
 and depending on your i2c implementation either of the following:
 
@@ -42,7 +42,7 @@ and depending on your i2c implementation either of the following:
   functions for software i2c communication via GPIOs
 
 ## Building the driver
-1. Adjust sensirion\_arch\_config.h if you don't have the `<stdint.h>` header
+1. Adjust `sensirion_arch_config.h` if you don't have the `<stdint.h>` header
    file available
 2. Implement necessary functions in one of the `*_implementation.c` files
    described above

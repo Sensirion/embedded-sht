@@ -4,9 +4,10 @@ clean_drivers=$(foreach d, $(drivers), clean_$(d))
 release_drivers=$(foreach d, $(drivers), release/$(d))
 release_sample_projects=$(foreach s, $(sample-projects), release/$(s))
 
-.PHONY: FORCE all $(release_drivers) $(clean_drivers) style-check style-fix
+.PHONY: FORCE all $(release_drivers) $(clean_drivers) style-check style-fix \
+	    utils clean_utils
 
-all: prepare $(drivers)
+all: prepare $(drivers) utils
 
 prepare: sht-common/sht_git_version.c
 
@@ -54,13 +55,20 @@ $(release_sample_projects):
 
 release: clean $(release_drivers) $(release_sample_projects)
 
+utils:
+	$(MAKE) -C utils
+
+clean_utils:
+	$(MAKE) -C utils clean
+
 $(clean_drivers):
 	export rel=$@ && \
 	export driver=$${rel#clean_} && \
 	cd $${driver} && $(MAKE) clean $(MFLAGS) && cd -
 
-clean: $(clean_drivers)
-	rm -rf release sht-common/sht_git_version.c
+clean: $(clean_drivers) clean_utils
+	rm -rf release
+	$(RM) sht-common/sht_git_version.c
 
 style-fix:
 	@if [ $$(git status --porcelain -uno 2> /dev/null | wc -l) -gt "0" ]; \
