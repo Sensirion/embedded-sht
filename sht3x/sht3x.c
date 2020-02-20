@@ -83,8 +83,8 @@ int16_t sht3x_read(int32_t *temperature, int32_t *humidity) {
                                            SENSIRION_NUM_WORDS(words));
     /**
      * formulas for conversion of the sensor signals, optimized for fixed point
-     * algebra: Temperature       = 175 * S_T / 2^16 - 45 Relative Humidity =
-     * 100 * S_RH / 2^16
+     * algebra: Temperature = 175 * S_T / 2^16 - 45
+     * Relative Humidity = * 100 * S_RH / 2^16
      */
     *temperature = ((21875 * (int32_t)words[0]) >> 13) - 45000;
     *humidity = ((12500 * (int32_t)words[1]) >> 13);

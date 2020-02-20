@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
                 Makefile.
  * [`fixed`]    Fix uVision compilation warnings (#1295-D: Deprecated
                 declaration of shtc1_sleep - give arg types)
+ * [`added`]    Add convenience function convert relative to absolute humidity
+ * [`added`]    Add convenience functions convert between Celsius and Fahrenheit
 
 ## [4.1.0] - 2019-09-13
 
