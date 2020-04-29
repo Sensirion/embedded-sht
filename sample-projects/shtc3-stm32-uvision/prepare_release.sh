@@ -11,7 +11,10 @@ BASE_DIR=$(dirname "$0")
 
 # Copy everything
 cp -r "${BASE_DIR}/"* "$1"
+# Create documentation
+pandoc --variable urlcolor=cyan -s -o "$1"/README.pdf "$1"/RELEASE_DOC.md
 # Delete unneeded files
 rm "$1"/copy_shtc1_driver.sh
 rm "$1"/prepare_release.sh
 rm "$1"/README.md
+rm "$1"/RELEASE_DOC.md
