@@ -63,7 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * First public release
 
-[Unreleased]: https://github.com/Sensirion/embedded-sht/compare/4.1.0...master
+[Unreleased]: https://github.com/Sensirion/embedded-sht/compare/5.0.0...master
+[5.0.0]: https://github.com/Sensirion/embedded-sht/compare/4.1.0...5.0.0
 [4.1.0]: https://github.com/Sensirion/embedded-sht/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/Sensirion/embedded-sht/compare/3.0.0...4.0.0
 [3.0.0]: https://github.com/Sensirion/embedded-sht/compare/2.1.0...3.0.0
