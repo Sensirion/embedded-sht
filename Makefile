@@ -44,12 +44,11 @@ $(release_drivers): sht-common/sht_git_version.c
 $(release_sample_projects):
 	export rel=$@ && \
 	export sample_project=$${rel#release/} && \
-	cd sample-projects/$${sample_project}/ && ./copy_shtc1_driver.sh && cd - && \
 	export tag="$$(git describe --always --dirty)" && \
 	export pkgname="$${sample_project}-sample-project-$${tag}" && \
 	export pkgdir="release/$${pkgname}" && \
 	rm -rf "$${pkgdir}" && mkdir -p "$${pkgdir}" && \
-	cp -r sample-projects/$${sample_project}/* "$${pkgdir}" && \
+	sample-projects/$${sample_project}/prepare_release.sh  "$${pkgdir}" && \
 	cd release && zip -r "$${pkgname}.zip" "$${pkgname}" && cd - && \
 	ln -sfn $${pkgname} release/$${sample_project}
 
