@@ -40,7 +40,11 @@ humidity sensor.
     | BP8           | SCL        |
     | BP9           | SDA        |
     | GND           | GND        |
-    Also connect pull-up resistors (e.g. 10kOhm) from SCL and SDA to VDD
+    Also connect pull-up resistors (e.g. 10kOhm) from SCL and SDA to VDD and
+    add a decoupling capacitor between VDD and GND.
+
+    ![Typical application circuit](images/schematics.png)
+
  6. Connect the STM32-Discovery board to the PC with the USB cable.
  7. Start the debugger by pressing Ctrl+F5 or click Debug in the menu →
     Start/Stop Debug Session ![Debug icon](images/uvision-debug.png).
