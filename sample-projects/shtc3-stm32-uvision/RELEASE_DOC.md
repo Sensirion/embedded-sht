@@ -53,5 +53,7 @@ humidity sensor.
 Sensirion's developer page
 [developer.sensirion.com](https://developer.sensirion.com) provides more
 developer resources for different platforms and products.
+Also the [SHTC3 product page](https://www.sensirion.com/shtc3/) has more
+detailed information about the sensor.
 
 [STM32VLDISCOVERY]: https://www.st.com/en/evaluation-tools/stm32vldiscovery.html
