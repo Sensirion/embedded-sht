@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+ * [`changed`]  Cleanup and better document stm32 sample code
+
 ## [5.0.0] - 2020-04-29
 
  * [`changed`]  Replace SHTC3's auto-sleeping with manual sleeping for better
