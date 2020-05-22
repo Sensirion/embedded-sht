@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
  * [`changed`]  Cleanup and better document stm32 sample code
+ * [`changed`]  Use configuration independent endianness conversions. No more
+                need to correctly set `SENSIRION_BIG_ENDIAN`
 
 ## [5.0.0] - 2020-04-29
 
