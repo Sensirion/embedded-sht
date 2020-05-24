@@ -106,16 +106,17 @@ void sht3x_enable_low_power_mode(uint8_t enable_low_power_mode) {
 
 int16_t sht3x_read_serial(uint32_t *serial) {
     int16_t ret;
-    union {
-        uint16_t words[SENSIRION_NUM_WORDS(*serial)];
-        uint32_t u32_value;
-    } buffer;
+    uint8_t serial_bytes[4];
 
-    ret = sensirion_i2c_delayed_read_cmd(
-        SHT3X_ADDRESS, SHT3X_CMD_READ_SERIAL_ID, SHT3X_CMD_DURATION_USEC,
-        buffer.words, SENSIRION_NUM_WORDS(buffer.words));
-    SENSIRION_WORDS_TO_BYTES(buffer.words, SENSIRION_NUM_WORDS(buffer.words));
-    *serial = be32_to_cpu(buffer.u32_value);
+    ret = sensirion_i2c_write_cmd(SHT3X_ADDRESS, SHT3X_CMD_READ_SERIAL_ID);
+    if (ret)
+        return ret;
+
+    sensirion_sleep_usec(SHT3X_CMD_DURATION_USEC);
+
+    ret = sensirion_i2c_read_words_as_bytes(SHT3X_ADDRESS, serial_bytes,
+                                            SENSIRION_NUM_WORDS(serial_bytes));
+    *serial = sensirion_bytes_to_uint32_t(serial_bytes);
     return ret;
 }
 
