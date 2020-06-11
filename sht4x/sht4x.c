@@ -75,8 +75,8 @@ int16_t sht4x_read(int32_t *temperature, int32_t *humidity) {
     /**
      * formulas for conversion of the sensor signals, optimized for fixed point
      * algebra:
-     * Temperature = 175 * S_T / 2^16 - 45
-     * Relative Humidity = 125 * (S_RH / 2^16) - 6
+     * Temperature = 175 * S_T / 65535 - 45
+     * Relative Humidity = 125 * (S_RH / 65535) - 6
      */
     *temperature = ((21875 * (int32_t)words[0]) >> 13) - 45000;
     *humidity = ((15625 * (int32_t)words[1]) >> 13) - 6000;
