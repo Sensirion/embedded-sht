@@ -52,6 +52,7 @@
 #define SHT4X_ADDRESS 0x44
 
 static uint8_t sht4x_cmd_measure = SHT4X_CMD_MEASURE_HPM;
+static uint16_t sht4x_cmd_measure_delay_us = SHT4X_MEASUREMENT_DURATION_USEC;
 
 int16_t sht4x_measure_blocking_read(int32_t *temperature, int32_t *humidity) {
     int16_t ret;
@@ -59,7 +60,7 @@ int16_t sht4x_measure_blocking_read(int32_t *temperature, int32_t *humidity) {
     ret = sht4x_measure();
     if (ret)
         return ret;
-    sensirion_sleep_usec(SHT4X_MEASUREMENT_DURATION_USEC);
+    sensirion_sleep_usec(sht4x_cmd_measure_delay_us);
     return sht4x_read(temperature, humidity);
 }
 
@@ -90,8 +91,13 @@ int16_t sht4x_probe(void) {
 }
 
 void sht4x_enable_low_power_mode(uint8_t enable_low_power_mode) {
-    sht4x_cmd_measure =
-        enable_low_power_mode ? SHT4X_CMD_MEASURE_LPM : SHT4X_CMD_MEASURE_HPM;
+    if (enable_low_power_mode) {
+        sht4x_cmd_measure = SHT4X_CMD_MEASURE_LPM;
+        sht4x_cmd_measure_delay_us = SHT4X_MEASUREMENT_DURATION_LPM_USEC;
+    } else {
+        sht4x_cmd_measure = SHT4X_CMD_MEASURE_HPM;
+        sht4x_cmd_measure_delay_us = SHT4X_MEASUREMENT_DURATION_USEC;
+    }
 }
 
 int16_t sht4x_read_serial(uint32_t *serial) {
