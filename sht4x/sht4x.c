@@ -109,7 +109,7 @@ int16_t sht4x_read_serial(uint32_t *serial) {
     if (ret)
         return ret;
 
-    sensirion_sleep_usec(SHT4X_MEASUREMENT_DURATION_USEC);
+    sensirion_sleep_usec(SHT4X_CMD_DURATION_USEC);
     ret = sensirion_i2c_read_words(SHT4X_ADDRESS, serial_words,
                                    SENSIRION_NUM_WORDS(serial_words));
     *serial = ((uint32_t)serial_words[0] << 16) | serial_words[1];
