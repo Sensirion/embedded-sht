@@ -45,7 +45,7 @@
 
 /* all measurement commands return T (CRC) RH (CRC) */
 #define SHT4X_CMD_MEASURE_HPM 0xFD
-#define SHT4X_CMD_MEASURE_LPM 0xEB
+#define SHT4X_CMD_MEASURE_LPM 0xE0
 #define SHT4X_CMD_READ_SERIAL 0x89
 #define SHT4X_CMD_DURATION_USEC 1000
 
