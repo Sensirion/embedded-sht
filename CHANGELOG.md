@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.1.0] - 2020-06-12
+
  * [`changed`]  Cleanup and better document stm32 sample code
  * [`changed`]  Use configuration independent endianness conversions. No more
                 need to correctly set `SENSIRION_BIG_ENDIAN`
@@ -67,7 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * First public release
 
-[Unreleased]: https://github.com/Sensirion/embedded-sht/compare/5.0.0...master
+[Unreleased]: https://github.com/Sensirion/embedded-sht/compare/5.1.0...master
+[5.1.0]: https://github.com/Sensirion/embedded-sht/compare/5.0.0...5.1.0
 [5.0.0]: https://github.com/Sensirion/embedded-sht/compare/4.1.0...5.0.0
 [4.1.0]: https://github.com/Sensirion/embedded-sht/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/Sensirion/embedded-sht/compare/3.0.0...4.0.0
