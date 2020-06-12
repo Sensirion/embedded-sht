@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.1.0] - 2020-06-12
+
+ * [`changed`]  Cleanup and better document stm32 sample code
+ * [`changed`]  Use configuration independent endianness conversions. No more
+                need to correctly set `SENSIRION_BIG_ENDIAN`
+
+## [5.0.0] - 2020-04-29
+
  * [`changed`]  Replace SHTC3's auto-sleeping with manual sleeping for better
                 control of the sensor and easier-to-read code.
                 - Adds the functions `shtc1_sleep()` and `shtc1_wake_up()`
@@ -18,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
                 Makefile.
  * [`fixed`]    Fix uVision compilation warnings (#1295-D: Deprecated
                 declaration of shtc1_sleep - give arg types)
+ * [`added`]    Add convenience function convert relative to absolute humidity
+ * [`added`]    Add convenience functions convert between Celsius and Fahrenheit
 
 ## [4.1.0] - 2019-09-13
 
@@ -59,7 +69,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * First public release
 
-[Unreleased]: https://github.com/Sensirion/embedded-sht/compare/4.1.0...master
+[Unreleased]: https://github.com/Sensirion/embedded-sht/compare/5.1.0...master
+[5.1.0]: https://github.com/Sensirion/embedded-sht/compare/5.0.0...5.1.0
+[5.0.0]: https://github.com/Sensirion/embedded-sht/compare/4.1.0...5.0.0
 [4.1.0]: https://github.com/Sensirion/embedded-sht/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/Sensirion/embedded-sht/compare/3.0.0...4.0.0
 [3.0.0]: https://github.com/Sensirion/embedded-sht/compare/2.1.0...3.0.0
