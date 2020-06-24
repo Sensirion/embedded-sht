@@ -53,7 +53,8 @@ extern "C" {
 #define STATUS_ERR_BAD_DATA (-1)
 #define STATUS_CRC_FAIL (-2)
 #define STATUS_UNKNOWN_DEVICE (-3)
-#define SHT4X_MEASUREMENT_DURATION_USEC 25000
+#define SHT4X_MEASUREMENT_DURATION_USEC 10000 /* 10ms "high repeatability" */
+#define SHT4X_MEASUREMENT_DURATION_LPM_USEC 2500 /* 2.5ms "low repeatability" */
 
 /**
  * Detects if a sensor is connected by reading out the ID register.
