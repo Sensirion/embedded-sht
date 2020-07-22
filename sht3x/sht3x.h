@@ -77,7 +77,7 @@ int16_t sht3x_probe(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int16_t sht3x_measure_blocking_read(int32_t *temperature, int32_t *humidity);
+int16_t sht3x_measure_blocking_read(int32_t* temperature, int32_t* humidity);
 
 /**
  * Starts a measurement in high precision mode. Use sht3x_read() to read out the
@@ -101,7 +101,7 @@ int16_t sht3x_measure(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int16_t sht3x_read(int32_t *temperature, int32_t *humidity);
+int16_t sht3x_read(int32_t* temperature, int32_t* humidity);
 
 /**
  * Enable or disable the SHT's low power mode
@@ -116,14 +116,14 @@ void sht3x_enable_low_power_mode(uint8_t enable_low_power_mode);
  * @param serial    the address for the result of the serial number
  * @return          0 if the command was successful, else an error code.
  */
-int16_t sht3x_read_serial(uint32_t *serial);
+int16_t sht3x_read_serial(uint32_t* serial);
 
 /**
  * Return the driver version
  *
  * @return Driver version string
  */
-const char *sht3x_get_driver_version(void);
+const char* sht3x_get_driver_version(void);
 
 /**
  * Returns the configured SHT3x address.

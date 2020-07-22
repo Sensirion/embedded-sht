@@ -77,7 +77,7 @@ int16_t shtc1_probe(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int16_t shtc1_measure_blocking_read(int32_t *temperature, int32_t *humidity);
+int16_t shtc1_measure_blocking_read(int32_t* temperature, int32_t* humidity);
 
 /**
  * Starts a measurement in high precision mode. Use shtc1_read() to read out the
@@ -101,7 +101,7 @@ int16_t shtc1_measure(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int16_t shtc1_read(int32_t *temperature, int32_t *humidity);
+int16_t shtc1_read(int32_t* temperature, int32_t* humidity);
 
 /**
  * Send the sensor to sleep, if supported.
@@ -170,14 +170,14 @@ void shtc1_enable_low_power_mode(uint8_t enable_low_power_mode);
  * @param serial    the address for the result of the serial number
  * @return          0 if the command was successful, else an error code.
  */
-int16_t shtc1_read_serial(uint32_t *serial);
+int16_t shtc1_read_serial(uint32_t* serial);
 
 /**
  * Return the driver version
  *
  * @return Driver version string
  */
-const char *shtc1_get_driver_version(void);
+const char* shtc1_get_driver_version(void);
 
 /**
  * Returns the configured SHT address.

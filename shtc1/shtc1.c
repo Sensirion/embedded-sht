@@ -73,7 +73,7 @@ int16_t shtc1_wake_up(void) {
     return sensirion_i2c_write_cmd(SHTC1_ADDRESS, SHTC3_CMD_WAKEUP);
 }
 
-int16_t shtc1_measure_blocking_read(int32_t *temperature, int32_t *humidity) {
+int16_t shtc1_measure_blocking_read(int32_t* temperature, int32_t* humidity) {
     int16_t ret;
 
     ret = shtc1_measure();
@@ -89,7 +89,7 @@ int16_t shtc1_measure(void) {
     return sensirion_i2c_write_cmd(SHTC1_ADDRESS, shtc1_cmd_measure);
 }
 
-int16_t shtc1_read(int32_t *temperature, int32_t *humidity) {
+int16_t shtc1_read(int32_t* temperature, int32_t* humidity) {
     uint16_t words[2];
     int16_t ret = sensirion_i2c_read_words(SHTC1_ADDRESS, words,
                                            SENSIRION_NUM_WORDS(words));
@@ -117,7 +117,7 @@ void shtc1_enable_low_power_mode(uint8_t enable_low_power_mode) {
         enable_low_power_mode ? SHTC1_CMD_MEASURE_LPM : SHTC1_CMD_MEASURE_HPM;
 }
 
-int16_t shtc1_read_serial(uint32_t *serial) {
+int16_t shtc1_read_serial(uint32_t* serial) {
     int16_t ret;
     const uint16_t tx_words[] = {0x007B};
     uint16_t serial_words[SENSIRION_NUM_WORDS(*serial)];
@@ -143,7 +143,7 @@ int16_t shtc1_read_serial(uint32_t *serial) {
     return ret;
 }
 
-const char *shtc1_get_driver_version(void) {
+const char* shtc1_get_driver_version(void) {
     return SHT_DRV_VERSION_STR;
 }
 
