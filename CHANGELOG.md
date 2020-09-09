@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+ * [`added`]    SHT4x Support
+
 ## [5.1.0] - 2020-06-12
 
  * [`changed`]  Cleanup and better document stm32 sample code
