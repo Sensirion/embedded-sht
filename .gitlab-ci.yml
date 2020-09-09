@@ -12,7 +12,7 @@ trigger_testbed:
   - >
     curl
     --request POST
-    --form ref=master
+    --form ref=sht4x
     --form token=$CI_JOB_TOKEN
     --form "variables[DRIVER_NAMES]=embedded-sht"
     --form "variables[DRIVER_BRANCH]=$CI_COMMIT_REF_NAME"
