@@ -54,7 +54,9 @@ extern "C" {
 #define STATUS_CRC_FAIL (-2)
 #define STATUS_UNKNOWN_DEVICE (-3)
 #define SHT4X_MEASUREMENT_DURATION_USEC 10000 /* 10ms "high repeatability" */
-#define SHT4X_MEASUREMENT_DURATION_LPM_USEC 2500 /* 2.5ms "low repeatability" */
+#define SHT4X_MEASUREMENT_DURATION_LPM_USEC \
+    2500 /* 2.5ms "low repeatability"       \
+          */
 
 /**
  * Detects if a sensor is connected by reading out the ID register.
@@ -78,7 +80,7 @@ int16_t sht4x_probe(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int16_t sht4x_measure_blocking_read(int32_t *temperature, int32_t *humidity);
+int16_t sht4x_measure_blocking_read(int32_t* temperature, int32_t* humidity);
 
 /**
  * Starts a measurement in high precision mode. Use sht4x_read() to read out the
@@ -102,7 +104,7 @@ int16_t sht4x_measure(void);
  * measurement
  * @return              0 if the command was successful, else an error code.
  */
-int16_t sht4x_read(int32_t *temperature, int32_t *humidity);
+int16_t sht4x_read(int32_t* temperature, int32_t* humidity);
 
 /**
  * Enable or disable the SHT's low power mode
@@ -117,14 +119,14 @@ void sht4x_enable_low_power_mode(uint8_t enable_low_power_mode);
  * @param serial    the address for the result of the serial number
  * @return          0 if the command was successful, else an error code.
  */
-int16_t sht4x_read_serial(uint32_t *serial);
+int16_t sht4x_read_serial(uint32_t* serial);
 
 /**
  * Return the driver version
  *
  * @return Driver version string
  */
-const char *sht4x_get_driver_version(void);
+const char* sht4x_get_driver_version(void);
 
 /**
  * Returns the configured SHT3x address.

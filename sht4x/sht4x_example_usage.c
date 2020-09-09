@@ -29,8 +29,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdio.h> // printf
 #include "sht4x.h"
+#include <stdio.h>  // printf
 
 /**
  * TO USE CONSOLE OUTPUT (PRINTF) AND WAIT (SLEEP) PLEASE ADAPT THEM TO YOUR
@@ -59,8 +59,7 @@ int main(void) {
         if (ret == STATUS_OK) {
             printf("measured temperature: %0.2f degreeCelsius, "
                    "measured humidity: %0.2f percentRH\n",
-                   temperature / 1000.0f,
-                   humidity / 1000.0f);
+                   temperature / 1000.0f, humidity / 1000.0f);
         } else {
             printf("error reading measurement\n");
         }
