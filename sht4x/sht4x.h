@@ -129,9 +129,9 @@ int16_t sht4x_read_serial(uint32_t* serial);
 const char* sht4x_get_driver_version(void);
 
 /**
- * Returns the configured SHT3x address.
+ * Returns the configured SHT4x address.
  *
- * @return SHT3x_ADDRESS
+ * @return SHT4x_ADDRESS
  */
 uint8_t sht4x_get_configured_address(void);
 
