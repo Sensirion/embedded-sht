@@ -17,8 +17,11 @@ cloning the repository.
 ## Repository content
 * `embedded-common` submodule repository for the common embedded driver HAL
 * `sht-common` common files for all SHTxx drivers, humidity conversion functions
-* `sht3x` SHT3x/SHT8x driver related
-* `shtc1` SHTC3/SHTC1/SHTW1/SHTW2 driver related
+* `sht4x` SHT4 driver
+* `sht3x` SHT3x/SHT8x driver
+* `shtc1` SHTC3/SHTC1/SHTW1/SHTW2 driver
+* `utils` Conversion functions (Centigrade to Fahrenheit, %RH relative humidity
+          to aboslute humidity)
 
 ## Collecting resources
 ```
