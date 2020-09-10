@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.2.0] - 2020-09-10
+
  * [`added`]    SHT4x Support
 
 ## [5.1.0] - 2020-06-12
@@ -71,7 +73,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * First public release
 
-[Unreleased]: https://github.com/Sensirion/embedded-sht/compare/5.1.0...master
+[Unreleased]: https://github.com/Sensirion/embedded-sht/compare/5.2.0...master
+[5.2.0]: https://github.com/Sensirion/embedded-sht/compare/5.1.0...5.2.0
 [5.1.0]: https://github.com/Sensirion/embedded-sht/compare/5.0.0...5.1.0
 [5.0.0]: https://github.com/Sensirion/embedded-sht/compare/4.1.0...5.0.0
 [4.1.0]: https://github.com/Sensirion/embedded-sht/compare/4.0.0...4.1.0
