@@ -1,4 +1,4 @@
-include ../common/base_config.inc
+include ../embedded-common/test-config/base_config.inc
 sht_driver_dir := ${driver_dir}/embedded-sht
 include ${sht_driver_dir}/sht3x/default_config.inc
 include ${sht_driver_dir}/sht4x/default_config.inc
