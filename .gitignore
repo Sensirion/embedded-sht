@@ -7,3 +7,11 @@
 /shtc1/shtc1_example_usage
 /shtc1/user_config.inc
 /sht-common/sht_git_version.c
+i2c-mux-testbed/
+tests/sht3x-test-hw_i2c
+tests/sht3x-test-sw_i2c
+tests/sht4x-test-hw_i2c
+tests/sht4x-test-sw_i2c
+tests/shtc1-test-hw_i2c
+tests/shtc1-test-sw_i2c
+

@@ -1,20 +1,34 @@
-stages:
-  - build
+include: 'https://raw.githubusercontent.com/Sensirion/ci-config-github/master/github-status-gitlab-ci-template-v1.yml'
 
-trigger_testbed:
+stages:
+  - publish_build_pending
+  - build
+  - publish_build_status
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GITHUB_PROJECT_NAME: embedded-sht
+
+publish_build_pending:
+  extends: .github_publish_pending
+  stage: publish_build_pending
+
+publish_success:
+  extends: .github_publish_success
+  stage: publish_build_status
+
+publish_failure:
+  extends: .github_publish_failure
+  stage: publish_build_status
+
+test:
   stage: build
   image:
-    name: registry.gitlab.sensirion.lokal/sensirion/docker/docker-ubuntu:18.04-1.2.0
+    name: registry.gitlab.sensirion.lokal/sensirion/docker/docker-rpi-testbed:1.1.0
   tags:
-    - docker
-    - linux
+    - mso-sw-testbed-2
   script:
-  - >
-    curl
-    --request POST
-    --form ref=master
-    --form token=$CI_JOB_TOKEN
-    --form "variables[DRIVER_NAMES]=embedded-sht"
-    --form "variables[DRIVER_BRANCH]=$CI_COMMIT_REF_NAME"
-    --form "variables[DRIVER_COMMIT_SHA]=$CI_COMMIT_SHA"
-    https://gitlab/api/v4/projects/801/trigger/pipeline
+    - git clone -b 2.0.0 https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab/MSO-SW/drivers/testbed/i2c-mux-testbed.git
+    - cd tests
+    - make test
+
