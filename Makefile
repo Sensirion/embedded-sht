@@ -80,7 +80,7 @@ style-fix:
 		echo "Refusing to run on dirty git state. Commit your changes first."; \
 		exit 1; \
 	fi; \
-	git ls-files | grep -e '\.\(c\|h\|cpp\)$$'| grep -v '^tests\/' | xargs clang-format -i -style=file;
+	git ls-files | grep -e '\.\(c\|h\|cpp\)$$' | xargs clang-format -i -style=file;
 
 style-check: style-fix
 	@if [ $$(git status --porcelain -uno 2> /dev/null | wc -l) -gt "0" ]; \

@@ -1,5 +1,5 @@
-#include "sensirion_test_setup.h"
 #include "sensirion_common.h"
+#include "sensirion_test_setup.h"
 #include "shtc1.h"
 
 static void shtc1_run_test() {
@@ -24,14 +24,13 @@ static void shtc1_run_test() {
     CHECK_ZERO_TEXT(ret, "shtc1_read");
     CHECK_TRUE_TEXT(temperature >= 5000 && temperature <= 45000,
                     "shtc1_read temperature");
-    CHECK_TRUE_TEXT(humidity >= 0 && humidity <= 100000,
-                    "shtc1_read humidity");
+    CHECK_TRUE_TEXT(humidity >= 0 && humidity <= 100000, "shtc1_read humidity");
 
     ret = shtc1_read_serial(&serial);
     CHECK_ZERO_TEXT(ret, "shtc1_read_serial");
     printf("SHTC1 serial: %u\n", serial);
 
-    const char *version = shtc1_get_driver_version();
+    const char* version = shtc1_get_driver_version();
     printf("shtc1_get_driver_version: %s\n", version);
 
     uint8_t addr = shtc1_get_configured_address();
@@ -80,7 +79,7 @@ static void test_teardown() {
     sensirion_i2c_release();
 }
 
-TEST_GROUP(SHTC1_Tests) {
+TEST_GROUP (SHTC1_Tests) {
     void setup() {
         sensirion_i2c_init();
         int16_t ret = sensirion_i2c_mux_set_single_channel(0x71, 6);
@@ -92,7 +91,7 @@ TEST_GROUP(SHTC1_Tests) {
     }
 };
 
-TEST_GROUP(SHTC3_Tests) {
+TEST_GROUP (SHTC3_Tests) {
     void setup() {
         sensirion_i2c_init();
         int16_t ret = sensirion_i2c_mux_set_single_channel(0x72, 0);
@@ -104,7 +103,7 @@ TEST_GROUP(SHTC3_Tests) {
     }
 };
 
-TEST_GROUP(SHTW2_Tests) {
+TEST_GROUP (SHTW2_Tests) {
     void setup() {
         sensirion_i2c_init();
         int16_t ret = sensirion_i2c_mux_set_single_channel(0x71, 0);
@@ -116,29 +115,23 @@ TEST_GROUP(SHTW2_Tests) {
     }
 };
 
-TEST(SHTC1_Tests, SHTC1Test) {
-    shtc1_test_all_power_modes();
-}
+TEST (SHTC1_Tests, SHTC1Test) { shtc1_test_all_power_modes(); }
 
-TEST(SHTC1_Tests, SHTC1Test_sleep) {
+TEST (SHTC1_Tests, SHTC1Test_sleep) {
     shtc1_sleep_fail();
     shtc1_test_all_power_modes();
 }
 
-TEST(SHTC3_Tests, SHTC3Test) {
-    shtc1_test_all_power_modes();
-}
+TEST (SHTC3_Tests, SHTC3Test) { shtc1_test_all_power_modes(); }
 
-TEST(SHTC3_Tests, SHTC3Test_sleep) {
+TEST (SHTC3_Tests, SHTC3Test_sleep) {
     shtc1_sleep_success();
     shtc1_test_all_power_modes();
 }
 
-TEST(SHTW2_Tests, SHTW2Test) {
-    shtc1_test_all_power_modes();
-}
+TEST (SHTW2_Tests, SHTW2Test) { shtc1_test_all_power_modes(); }
 
-TEST(SHTW2_Tests, SHTW2Test_sleep) {
+TEST (SHTW2_Tests, SHTW2Test_sleep) {
     shtc1_sleep_fail();
     shtc1_test_all_power_modes();
 }
