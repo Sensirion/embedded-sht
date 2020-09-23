@@ -10,4 +10,5 @@ IndentCaseLabels: true
 SpacesBeforeTrailingComments: 2
 PointerAlignment: Left
 AlignEscapedNewlines: Left
+ForEachMacros: ['TEST_GROUP', 'TEST']
 ...

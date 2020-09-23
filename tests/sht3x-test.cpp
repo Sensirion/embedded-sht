@@ -23,14 +23,13 @@ static void sht3x_run_test() {
     CHECK_ZERO_TEXT(ret, "sht3x_read");
     CHECK_TRUE_TEXT(temperature >= 5000 && temperature <= 45000,
                     "sht3x_read temperature");
-    CHECK_TRUE_TEXT(humidity >= 0 && humidity <= 100000,
-                    "sht3x_read humidity");
+    CHECK_TRUE_TEXT(humidity >= 0 && humidity <= 100000, "sht3x_read humidity");
 
     ret = sht3x_read_serial(&serial);
     CHECK_ZERO_TEXT(ret, "sht3x_read_serial");
     printf("SHT3X serial: %u\n", serial);
 
-    const char *version = sht3x_get_driver_version();
+    const char* version = sht3x_get_driver_version();
     printf("sht3x_get_driver_version: %s\n", version);
 
     uint8_t addr = sht3x_get_configured_address();
@@ -55,7 +54,7 @@ static void test_teardown() {
     sensirion_i2c_release();
 }
 
-TEST_GROUP(SHT31_Tests) {
+TEST_GROUP (SHT31_Tests) {
     void setup() {
         sensirion_i2c_init();
         int16_t ret = sensirion_i2c_mux_set_single_channel(0x72, 0);
@@ -67,6 +66,4 @@ TEST_GROUP(SHT31_Tests) {
     }
 };
 
-TEST(SHT31_Tests, SHT31Test) {
-    sht3x_test_all_power_modes();
-}
+TEST (SHT31_Tests, SHT31Test) { sht3x_test_all_power_modes(); }
