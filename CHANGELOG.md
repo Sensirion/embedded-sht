@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.2.1] - 2020-12-14
+
  * [`changed`] Makefile to only include needed files from embedded-common
  * [`changed`] Updated embedded-common to 0.1.0 to improve compatibility when
                using multiple embedded drivers
@@ -77,7 +79,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * First public release
 
-[Unreleased]: https://github.com/Sensirion/embedded-sht/compare/5.2.0...master
+[Unreleased]: https://github.com/Sensirion/embedded-sht/compare/5.2.1...master
+[5.2.1]: https://github.com/Sensirion/embedded-sht/compare/5.2.0...5.2.1
 [5.2.0]: https://github.com/Sensirion/embedded-sht/compare/5.1.0...5.2.0
 [5.1.0]: https://github.com/Sensirion/embedded-sht/compare/5.0.0...5.1.0
 [5.0.0]: https://github.com/Sensirion/embedded-sht/compare/4.1.0...5.0.0
