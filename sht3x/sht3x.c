@@ -46,14 +46,31 @@
 /* all measurement commands return T (CRC) RH (CRC) */
 #if USE_SENSIRION_CLOCK_STRETCHING
 #define SHT3X_CMD_MEASURE_HPM 0x2C06
+#define SHT3X_CMD_MEASURE_MPM 0x2C0D
 #define SHT3X_CMD_MEASURE_LPM 0x2C10
 #else /* USE_SENSIRION_CLOCK_STRETCHING */
 #define SHT3X_CMD_MEASURE_HPM 0x2400
+#define SHT3X_CMD_MEASURE_MPM 0x240B
 #define SHT3X_CMD_MEASURE_LPM 0x2416
 #endif /* USE_SENSIRION_CLOCK_STRETCHING */
+
+#define SHT3X_HUMIDITY_LIMIT_MSK 0xFE00U
+#define SHT3X_TEMPERATURE_LIMIT_MSK 0x01FFU
+
 static const uint16_t SHT3X_CMD_READ_STATUS_REG = 0xF32D;
+static const uint16_t SHT3X_CMD_CLR_STATUS_REG = 0x3041;
 static const uint16_t SHT3X_CMD_READ_SERIAL_ID = 0x3780;
 static const uint16_t SHT3X_CMD_DURATION_USEC = 1000;
+/* read commands for the alert settings */
+static const uint16_t SHT3X_CMD_READ_HIALRT_LIM_SET = 0xE11F;
+static const uint16_t SHT3X_CMD_READ_HIALRT_LIM_CLR = 0xE114;
+static const uint16_t SHT3X_CMD_READ_LOALRT_LIM_CLR = 0xE109;
+static const uint16_t SHT3X_CMD_READ_LOALRT_LIM_SET = 0xE102;
+/* write commands for the alert settings */
+static const uint16_t SHT3X_CMD_WRITE_HIALRT_LIM_SET = 0x611D;
+static const uint16_t SHT3X_CMD_WRITE_HIALRT_LIM_CLR = 0x6116;
+static const uint16_t SHT3X_CMD_WRITE_LOALRT_LIM_CLR = 0x610B;
+static const uint16_t SHT3X_CMD_WRITE_LOALRT_LIM_SET = 0x6100;
 
 static uint16_t sht3x_cmd_measure = SHT3X_CMD_MEASURE_HPM;
 
@@ -95,9 +112,41 @@ int16_t sht3x_probe(sht3x_i2c_addr_t addr) {
                                           SHT3X_CMD_DURATION_USEC, &status, 1);
 }
 
+int16_t sht3x_get_status(sht3x_i2c_addr_t addr, uint16_t* status) {
+    return sensirion_i2c_delayed_read_cmd(addr, SHT3X_CMD_READ_STATUS_REG,
+                                          SHT3X_CMD_DURATION_USEC, status, 1);
+}
+
+int16_t sht3x_clear_status(sht3x_i2c_addr_t addr) {
+    return sensirion_i2c_write_cmd(addr, SHT3X_CMD_CLR_STATUS_REG);
+}
+
 void sht3x_enable_low_power_mode(uint8_t enable_low_power_mode) {
     sht3x_cmd_measure =
         enable_low_power_mode ? SHT3X_CMD_MEASURE_LPM : SHT3X_CMD_MEASURE_HPM;
+}
+
+void sht3x_set_power_mode(sht3x_measurement_mode_t mode) {
+
+    switch (mode) {
+        case SHT3X_MEAS_MODE_LPM: {
+            sht3x_cmd_measure = SHT3X_CMD_MEASURE_LPM;
+            break;
+        }
+        case SHT3X_MEAS_MODE_MPM: {
+            sht3x_cmd_measure = SHT3X_CMD_MEASURE_MPM;
+            break;
+        }
+        case SHT3X_MEAS_MODE_HPM: {
+            sht3x_cmd_measure = SHT3X_CMD_MEASURE_HPM;
+            break;
+        }
+        default: {
+            sht3x_cmd_measure = SHT3X_CMD_MEASURE_HPM;
+            break;
+        }
+    }
+    return;
 }
 
 int16_t sht3x_read_serial(sht3x_i2c_addr_t addr, uint32_t* serial) {
@@ -122,4 +171,96 @@ const char* sht3x_get_driver_version(sht3x_i2c_addr_t addr) {
 
 uint8_t sht3x_get_configured_address(sht3x_i2c_addr_t addr) {
     return addr;
+}
+
+int16_t sht3x_set_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
+                            uint16_t humidity, int16_t temperature) {
+    int16_t ret;
+    uint32_t tmp;
+    uint16_t limitVal = 0U;
+
+    /* convert inputs to alrt threshold word */
+    tmp = (humidity << 16) - humidity;
+    tmp = tmp / 1000U; /*humidity was provided in 10%RH*/
+    limitVal = ((uint16_t)tmp & SHT3X_HUMIDITY_LIMIT_MSK);
+
+    tmp = (uint32_t)(temperature + 450);
+    tmp = (tmp << 16) - tmp;
+    tmp = tmp / 1750U;
+    tmp = (tmp >> 7);
+    limitVal |= ((uint16_t)tmp & SHT3X_TEMPERATURE_LIMIT_MSK);
+
+    switch (thd) {
+        case SHT3X_HIALRT_SET:
+            ret = sensirion_i2c_write_cmd_with_args(
+                addr, SHT3X_CMD_WRITE_HIALRT_LIM_SET, &limitVal, 1);
+            break;
+
+        case SHT3X_HIALRT_CLR:
+            ret = sensirion_i2c_write_cmd_with_args(
+                addr, SHT3X_CMD_WRITE_HIALRT_LIM_CLR, &limitVal, 1);
+            break;
+
+        case SHT3X_LOALRT_CLR:
+            ret = sensirion_i2c_write_cmd_with_args(
+                addr, SHT3X_CMD_WRITE_LOALRT_LIM_CLR, &limitVal, 1);
+            break;
+
+        case SHT3X_LOALRT_SET:
+            ret = sensirion_i2c_write_cmd_with_args(
+                addr, SHT3X_CMD_WRITE_LOALRT_LIM_SET, &limitVal, 1);
+            break;
+
+        default:
+            ret = STATUS_ERR_INVALID_PARAMS;
+            break;
+    }
+    return ret;
+}
+
+int16_t sht3x_get_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
+                            uint16_t* humidity, int16_t* temperature) {
+
+    int16_t ret;
+    uint16_t word;
+    int32_t tmp;
+
+    switch (thd) {
+        case SHT3X_HIALRT_SET:
+            ret = sensirion_i2c_read_cmd(addr, SHT3X_CMD_READ_HIALRT_LIM_SET,
+                                         &word, 1);
+            break;
+
+        case SHT3X_HIALRT_CLR:
+            ret = sensirion_i2c_read_cmd(addr, SHT3X_CMD_READ_HIALRT_LIM_CLR,
+                                         &word, 1);
+            break;
+
+        case SHT3X_LOALRT_CLR:
+            ret = sensirion_i2c_read_cmd(addr, SHT3X_CMD_READ_LOALRT_LIM_CLR,
+                                         &word, 1);
+            break;
+
+        case SHT3X_LOALRT_SET:
+            ret = sensirion_i2c_read_cmd(addr, SHT3X_CMD_READ_LOALRT_LIM_SET,
+                                         &word, 1);
+            break;
+
+        default:
+            ret = STATUS_ERR_INVALID_PARAMS;
+            break;
+    }
+
+    /* convert threshold word to alrt settings in 10*%RH & 10*°C */
+    tmp = (int32_t)(word & SHT3X_HUMIDITY_LIMIT_MSK); /*only 7MSbits*/
+    tmp = (1000 * tmp) / 65535;
+    *humidity = tmp;
+
+    tmp = (int32_t)(word & SHT3X_TEMPERATURE_LIMIT_MSK); /*only 9LSbits*/
+    tmp = (tmp << 7);
+    tmp = (tmp * 1750) / 65535;
+    tmp = tmp - 450;
+    *temperature = (int16_t)tmp;
+
+    return ret;
 }
