@@ -8,37 +8,38 @@ static void sht3x_run_test() {
     int32_t humidity;
     uint32_t serial;
 
-    ret = sht3x_measure_blocking_read(&temperature, &humidity);
+    ret = sht3x_measure_blocking_read(SHT3X_I2C_ADDR_DFLT, &temperature,
+                                      &humidity);
     CHECK_ZERO_TEXT(ret, "sht3x_measure_blocking_read");
     CHECK_TRUE_TEXT(temperature >= 5000 && temperature <= 45000,
                     "sht3x_measure_blocking_read temperature");
     CHECK_TRUE_TEXT(humidity >= 0 && humidity <= 100000,
                     "sht3x_measure_blocking_read humidity");
 
-    ret = sht3x_measure();
+    ret = sht3x_measure(SHT3X_I2C_ADDR_DFLT);
     CHECK_ZERO_TEXT(ret, "sht3x_measure");
 
     sensirion_sleep_usec(SHT3X_MEASUREMENT_DURATION_USEC);
 
-    ret = sht3x_read(&temperature, &humidity);
+    ret = sht3x_read(SHT3X_I2C_ADDR_DFLT, &temperature, &humidity);
     CHECK_ZERO_TEXT(ret, "sht3x_read");
     CHECK_TRUE_TEXT(temperature >= 5000 && temperature <= 45000,
                     "sht3x_read temperature");
     CHECK_TRUE_TEXT(humidity >= 0 && humidity <= 100000, "sht3x_read humidity");
 
-    ret = sht3x_read_serial(&serial);
+    ret = sht3x_read_serial(SHT3X_I2C_ADDR_DFLT, &serial);
     CHECK_ZERO_TEXT(ret, "sht3x_read_serial");
     printf("SHT3X serial: %u\n", serial);
 
     const char* version = sht3x_get_driver_version();
     printf("sht3x_get_driver_version: %s\n", version);
 
-    uint8_t addr = sht3x_get_configured_address();
+    uint8_t addr = sht3x_get_configured_address(SHT3X_I2C_ADDR_DFLT);
     CHECK_EQUAL_TEXT(0x44, addr, "sht3x_get_configured_address");
 }
 
 static void sht3x_test_all_power_modes() {
-    int16_t ret = sht3x_probe();
+    int16_t ret = sht3x_probe(SHT3X_I2C_ADDR_DFLT);
     CHECK_ZERO_TEXT(ret, "sht3x_probe");
 
     printf("Running tests in normal mode...\n");

@@ -56,13 +56,23 @@ extern "C" {
 #define SHT3X_MEASUREMENT_DURATION_USEC 15000
 
 /**
+ * @brief SHT3x I2C 7-bit address option
+ */
+typedef enum _sht3x_i2c_addr {
+    SHT3X_I2C_ADDR_DFLT = 0x44,
+    SHT3X_I2C_ADDR_ALT = 0x45
+} sht3x_i2c_addr_t;
+
+/**
  * Detects if a sensor is connected by reading out the ID register.
  * If the sensor does not answer or if the answer is not the expected value,
  * the test fails.
  *
+ * @param[in] addr the sensor address
+ *
  * @return 0 if a sensor was detected
  */
-int16_t sht3x_probe(void);
+int16_t sht3x_probe(sht3x_i2c_addr_t addr);
 
 /**
  * Starts a measurement and then reads out the results. This function blocks
@@ -71,22 +81,27 @@ int16_t sht3x_probe(void);
  * Temperature is returned in [degree Celsius], multiplied by 1000,
  * and relative humidity in [percent relative humidity], multiplied by 1000.
  *
- * @param temperature   the address for the result of the temperature
+ * @param[in]  addr the sensor address
+ * @param[out] temperature   the address for the result of the temperature
  * measurement
- * @param humidity      the address for the result of the relative humidity
+ * @param[out] humidity      the address for the result of the relative humidity
  * measurement
+ *
  * @return              0 if the command was successful, else an error code.
  */
-int16_t sht3x_measure_blocking_read(int32_t* temperature, int32_t* humidity);
+int16_t sht3x_measure_blocking_read(sht3x_i2c_addr_t addr, int32_t* temperature,
+                                    int32_t* humidity);
 
 /**
  * Starts a measurement in high precision mode. Use sht3x_read() to read out the
  * values, once the measurement is done. The duration of the measurement depends
  * on the sensor in use, please consult the datasheet.
  *
+ * @param[in]  addr the sensor address
+ *
  * @return     0 if the command was successful, else an error code.
  */
-int16_t sht3x_measure(void);
+int16_t sht3x_measure(sht3x_i2c_addr_t addr);
 
 /**
  * Reads out the results of a measurement that was previously started by
@@ -95,42 +110,51 @@ int16_t sht3x_measure(void);
  * Temperature is returned in [degree Celsius], multiplied by 1000,
  * and relative humidity in [percent relative humidity], multiplied by 1000.
  *
- * @param temperature   the address for the result of the temperature
+ * @param[in]  addr the sensor address
+ * @param[out] temperature   the address for the result of the temperature
  * measurement
- * @param humidity      the address for the result of the relative humidity
+ * @param[out] humidity      the address for the result of the relative humidity
  * measurement
+ *
  * @return              0 if the command was successful, else an error code.
  */
-int16_t sht3x_read(int32_t* temperature, int32_t* humidity);
+int16_t sht3x_read(sht3x_i2c_addr_t addr, int32_t* temperature,
+                   int32_t* humidity);
 
 /**
  * Enable or disable the SHT's low power mode
  *
- * @param enable_low_power_mode 1 to enable low power mode, 0 to disable
+ * @param[in] enable_low_power_mode 1 to enable low power mode, 0 to disable
  */
 void sht3x_enable_low_power_mode(uint8_t enable_low_power_mode);
 
 /**
  * Read out the serial number
  *
- * @param serial    the address for the result of the serial number
+ * @param[in]  addr the sensor address
+ * @param[out] serial    the address for the result of the serial number
+ *
  * @return          0 if the command was successful, else an error code.
  */
-int16_t sht3x_read_serial(uint32_t* serial);
+int16_t sht3x_read_serial(sht3x_i2c_addr_t addr, uint32_t* serial);
 
 /**
  * Return the driver version
  *
+ * @param[in]  addr the sensor address
+ *
  * @return Driver version string
  */
-const char* sht3x_get_driver_version(void);
+const char* sht3x_get_driver_version(sht3x_i2c_addr_t addr);
 
 /**
  * Returns the configured SHT3x address.
  *
+ * @param[in]  addr the sensor address
+ *
  * @return SHT3x_ADDRESS
  */
-uint8_t sht3x_get_configured_address(void);
+uint8_t sht3x_get_configured_address(sht3x_i2c_addr_t addr);
 
 #ifdef __cplusplus
 }
