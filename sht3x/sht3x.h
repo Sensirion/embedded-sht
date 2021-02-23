@@ -57,11 +57,11 @@ extern "C" {
 #define SHT3X_MEASUREMENT_DURATION_USEC 15000
 
 /* status word macros */
-#define SHT3X_IS_ALRT_PENDING(status) (bool)(((status)&0x8000U) != 0U)
-#define SHT3X_IS_ALRT_RH_TRACK(status) (bool)(((status)&0x0800) != 0U)
-#define SHT3X_IS_ALRT_T_TRACK(status) (bool)(((status)&0x0400U) != 0U)
-#define SHT3X_IS_SYSTEM_RST_DETECT(status) (bool)(((status)&0x0010U) != 0U)
-#define SHT3X_IS_LAST_CRC_FAIL(status) (bool)(((status)&0x0001U) != 0U)
+#define SHT3X_IS_ALRT_PENDING(status) (((status)&0x8000U) != 0U)
+#define SHT3X_IS_ALRT_RH_TRACK(status) (((status)&0x0800) != 0U)
+#define SHT3X_IS_ALRT_T_TRACK(status) (((status)&0x0400U) != 0U)
+#define SHT3X_IS_SYSTEM_RST_DETECT(status) (((status)&0x0010U) != 0U)
+#define SHT3X_IS_LAST_CRC_FAIL(status) (((status)&0x0001U) != 0U)
 
 /**
  * @brief SHT3x I2C 7-bit address option
@@ -72,7 +72,7 @@ typedef enum _sht3x_i2c_addr {
 } sht3x_i2c_addr_t;
 
 /**
- * @brief SHT3x I2C 7-bit address option
+ * @brief SHT3x measurment mode options (Low, Medium and High rerefresh rates)
  */
 typedef enum _sht3x_measurement_mode {
     SHT3X_MEAS_MODE_LPM, /*low power mode*/
@@ -91,7 +91,7 @@ typedef enum _sht3x_alert_thd {
 } sht3x_alert_thd_t;
 
 /**
- * Detects if a sensor is connected by reading out the ID register.
+ * @brief Detects if a sensor is connected by reading out the ID register.
  * If the sensor does not answer or if the answer is not the expected value,
  * the test fails.
  *
@@ -102,7 +102,7 @@ typedef enum _sht3x_alert_thd {
 int16_t sht3x_probe(sht3x_i2c_addr_t addr);
 
 /**
- * Read the sensot status word
+ * @brief Read the sensor status word
  *
  * @param[in] addr the sensor address
  * @param[out] status  the address for the result of the status word
@@ -112,7 +112,7 @@ int16_t sht3x_probe(sht3x_i2c_addr_t addr);
 int16_t sht3x_get_status(sht3x_i2c_addr_t addr, uint16_t* status);
 
 /**
- * Clear the status register alert flags
+ * @brief Clear the status register alert flags
  *
  * @param[in] addr the sensor address
  *
@@ -121,11 +121,11 @@ int16_t sht3x_get_status(sht3x_i2c_addr_t addr, uint16_t* status);
 int16_t sht3x_clear_status(sht3x_i2c_addr_t addr);
 
 /**
- * Starts a measurement and then reads out the results. This function blocks
- * while the measurement is in progress. The duration of the measurement depends
- * on the sensor in use, please consult the datasheet.
- * Temperature is returned in [degree Celsius], multiplied by 1000,
- * and relative humidity in [percent relative humidity], multiplied by 1000.
+ * @brief Starts a measurement and then reads out the results. This function
+ * blocks while the measurement is in progress. The duration of the measurement
+ * depends on the sensor in use, please consult the datasheet. Temperature is
+ * returned in [degree Celsius], multiplied by 1000, and relative humidity in
+ * [percent relative humidity], multiplied by 1000.
  *
  * @param[in]  addr the sensor address
  * @param[out] temperature   the address for the result of the temperature
@@ -139,9 +139,9 @@ int16_t sht3x_measure_blocking_read(sht3x_i2c_addr_t addr, int32_t* temperature,
                                     int32_t* humidity);
 
 /**
- * Starts a measurement in high precision mode. Use sht3x_read() to read out the
- * values, once the measurement is done. The duration of the measurement depends
- * on the sensor in use, please consult the datasheet.
+ * @brief Starts a measurement in high precision mode. Use sht3x_read() to read
+ * out the values, once the measurement is done. The duration of the measurement
+ * depends on the sensor in use, please consult the datasheet.
  *
  * @param[in]  addr the sensor address
  *
@@ -150,7 +150,7 @@ int16_t sht3x_measure_blocking_read(sht3x_i2c_addr_t addr, int32_t* temperature,
 int16_t sht3x_measure(sht3x_i2c_addr_t addr);
 
 /**
- * Reads out the results of a measurement that was previously started by
+ * @brief Reads out the results of a measurement that was previously started by
  * sht3x_measure(). If the measurement is still in progress, this function
  * returns an error.
  * Temperature is returned in [degree Celsius], multiplied by 1000,
@@ -168,21 +168,21 @@ int16_t sht3x_read(sht3x_i2c_addr_t addr, int32_t* temperature,
                    int32_t* humidity);
 
 /**
- * Enable or disable the SHT's low power mode
+ * @brief Enable or disable the SHT's low power mode
  *
  * @param[in] enable_low_power_mode 1 to enable low power mode, 0 to disable
  */
 void sht3x_enable_low_power_mode(uint8_t enable_low_power_mode);
 
 /**
- * Enable or disable the SHT's low power mode
+ * @brief Enable or disable the SHT's low power mode
  *
  * @param[in] mode power mode selector
  */
 void sht3x_set_power_mode(sht3x_measurement_mode_t mode);
 
 /**
- * Read out the serial number
+ * @brief Read out the serial number
  *
  * @param[in]  addr the sensor address
  * @param[out] serial    the address for the result of the serial number
@@ -192,25 +192,14 @@ void sht3x_set_power_mode(sht3x_measurement_mode_t mode);
 int16_t sht3x_read_serial(sht3x_i2c_addr_t addr, uint32_t* serial);
 
 /**
- * Return the driver version
- *
- * @param[in]  addr the sensor address
+ * @brief Return the driver version
  *
  * @return Driver version string
  */
-const char* sht3x_get_driver_version(sht3x_i2c_addr_t addr);
+const char* sht3x_get_driver_version(void);
 
 /**
- * Returns the configured SHT3x address.
- *
- * @param[in]  addr the sensor address
- *
- * @return SHT3x_ADDRESS
- */
-uint8_t sht3x_get_configured_address(sht3x_i2c_addr_t addr);
-
-/**
- * Set target temperature and humidity alrt threshold
+ * @brief Set target temperature and humidity alert threshold
  *
  * @param[in] addr the sensor address
  * @param[in] thd target alert threshold to be edited
@@ -223,7 +212,7 @@ int16_t sht3x_set_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
                             uint16_t humidity, int16_t temperature);
 
 /**
- * Get target temperature and humidity alrt threshold
+ * @brief Get target temperature and humidity alert threshold
  *
  * @param[in]  addr the sensor address
  *  @param[in] thd target alert threshold to be edited

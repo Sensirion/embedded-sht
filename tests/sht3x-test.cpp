@@ -33,9 +33,6 @@ static void sht3x_run_test() {
 
     const char* version = sht3x_get_driver_version();
     printf("sht3x_get_driver_version: %s\n", version);
-
-    uint8_t addr = sht3x_get_configured_address(SHT3X_I2C_ADDR_DFLT);
-    CHECK_EQUAL_TEXT(0x44, addr, "sht3x_get_configured_address");
 }
 
 static void sht3x_test_all_power_modes() {

@@ -165,12 +165,8 @@ int16_t sht3x_read_serial(sht3x_i2c_addr_t addr, uint32_t* serial) {
     return ret;
 }
 
-const char* sht3x_get_driver_version(sht3x_i2c_addr_t addr) {
+const char* sht3x_get_driver_version(void) {
     return SHT_DRV_VERSION_STR;
-}
-
-uint8_t sht3x_get_configured_address(sht3x_i2c_addr_t addr) {
-    return addr;
 }
 
 int16_t sht3x_set_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
@@ -179,13 +175,13 @@ int16_t sht3x_set_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
     uint32_t tmp;
     uint16_t limitVal = 0U;
 
-    /* convert inputs to alrt threshold word */
-    tmp = (humidity << 16) - humidity;
+    /* convert inputs to alert threshold word */
+    tmp = humidity * 65535U;
     tmp = tmp / 1000U; /*humidity was provided in 10%RH*/
     limitVal = ((uint16_t)tmp & SHT3X_HUMIDITY_LIMIT_MSK);
 
     tmp = (uint32_t)(temperature + 450);
-    tmp = (tmp << 16) - tmp;
+    tmp = tmp * 65535U;
     tmp = tmp / 1750U;
     tmp = (tmp >> 7);
     limitVal |= ((uint16_t)tmp & SHT3X_TEMPERATURE_LIMIT_MSK);
@@ -251,7 +247,7 @@ int16_t sht3x_get_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
             break;
     }
 
-    /* convert threshold word to alrt settings in 10*%RH & 10*°C */
+    /* convert threshold word to alert settings in 10*%RH & 10*°C */
     tmp = (int32_t)(word & SHT3X_HUMIDITY_LIMIT_MSK); /*only 7MSbits*/
     tmp = (1000 * tmp) / 65535;
     *humidity = tmp;
