@@ -215,7 +215,7 @@ int16_t sht3x_set_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
  * @brief Get target temperature and humidity alert threshold
  *
  * @param[in]  addr the sensor address
- *  @param[in] thd target alert threshold to be edited
+ * @param[in] thd target alert threshold to be edited
  * @param[out] humidity address for the result humidity thd in 10*%RH
  * @param[out] temperature address for the result temperature thd in 10*°C
  *
