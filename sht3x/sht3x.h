@@ -107,7 +107,7 @@ int16_t sht3x_probe(sht3x_i2c_addr_t addr);
  * @param[in] addr the sensor address
  * @param[out] status  the address for the result of the status word
  *
- * @return 0 if a sensor was detected
+ *  @return 0 if the command was successful, else an error code
  */
 int16_t sht3x_get_status(sht3x_i2c_addr_t addr, uint16_t* status);
 
@@ -116,7 +116,7 @@ int16_t sht3x_get_status(sht3x_i2c_addr_t addr, uint16_t* status);
  *
  * @param[in] addr the sensor address
  *
- * @return 0 if a sensor was detected
+ *  @return 0 if the command was successful, else an error code
  */
 int16_t sht3x_clear_status(sht3x_i2c_addr_t addr);
 
@@ -175,7 +175,7 @@ int16_t sht3x_read(sht3x_i2c_addr_t addr, int32_t* temperature,
 void sht3x_enable_low_power_mode(uint8_t enable_low_power_mode);
 
 /**
- * @brief Enable or disable the SHT's low power mode
+ * @brief Set the desired sensor's operating power mode
  *
  * @param[in] mode power mode selector
  */
@@ -203,26 +203,58 @@ const char* sht3x_get_driver_version(void);
  *
  * @param[in] addr the sensor address
  * @param[in] thd target alert threshold to be edited
- * @param[in] humidity humidity threshold in 10*%RH
- * @param[in] temperature temperature threshold in 10*%°C
+ * @param[in] humidity humidity threshold in 1000*%RH
+ * @param[in] temperature temperature threshold in 1000*°C
  *
  * @return          0 if the command was successful, else an error code.
  */
 int16_t sht3x_set_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
-                            uint16_t humidity, int16_t temperature);
+                            uint32_t humidity, int32_t temperature);
 
 /**
  * @brief Get target temperature and humidity alert threshold
  *
  * @param[in]  addr the sensor address
- * @param[in] thd target alert threshold to be edited
- * @param[out] humidity address for the result humidity thd in 10*%RH
- * @param[out] temperature address for the result temperature thd in 10*°C
+ * @param[in]  thd target alert threshold to be edited
+ * @param[out] humidity address for the result humidity thd in 1000*%RH
+ * @param[out] temperature address for the result temperature thd in 1000*°C
  *
  * @return          0 if the command was successful, else an error code.
  */
 int16_t sht3x_get_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
-                            uint16_t* humidity, int16_t* temperature);
+                            int32_t* humidity, int32_t* temperature);
+
+/**
+ * @brief converts temperature from ADC ticks
+ *
+ * @param tick sensor ADC ticks
+ * @param temperature temperature value in T°C*1000
+ */
+void tick_to_temperature(uint16_t tick, int32_t* temperature);
+
+/**
+ * @brief converts humidity from ADC ticks
+ *
+ * @param tick sensor ADC ticks
+ * @param humidity humidity value in %*1000
+ */
+void tick_to_humidity(uint16_t tick, int32_t* humidity);
+
+/**
+ * @brief converts temperature to ADC ticks
+ *
+ * @param temperature temperature value in T°C*1000
+ * @param tick sensor ADC ticks
+ */
+void temperature_to_tick(int32_t temperature, uint16_t* tick);
+
+/**
+ * @brief converts humidity to ADC ticks
+ *
+ * @param humidity humidity value in %*1000
+ * @param tick sensor ADC ticks
+ */
+void humidity_to_tick(int32_t humidity, uint16_t* tick);
 
 #ifdef __cplusplus
 }

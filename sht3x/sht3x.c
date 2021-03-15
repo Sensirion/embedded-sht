@@ -100,8 +100,8 @@ int16_t sht3x_read(sht3x_i2c_addr_t addr, int32_t* temperature,
      * algebra: Temperature = 175 * S_T / 2^16 - 45
      * Relative Humidity = * 100 * S_RH / 2^16
      */
-    *temperature = ((21875 * (int32_t)words[0]) >> 13) - 45000;
-    *humidity = ((12500 * (int32_t)words[1]) >> 13);
+    tick_to_temperature(words[0], temperature);
+    tick_to_humidity(words[1], humidity);
 
     return ret;
 }
@@ -146,7 +146,6 @@ void sht3x_set_power_mode(sht3x_measurement_mode_t mode) {
             break;
         }
     }
-    return;
 }
 
 int16_t sht3x_read_serial(sht3x_i2c_addr_t addr, uint32_t* serial) {
@@ -170,21 +169,18 @@ const char* sht3x_get_driver_version(void) {
 }
 
 int16_t sht3x_set_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
-                            uint16_t humidity, int16_t temperature) {
+                            uint32_t humidity, int32_t temperature) {
     int16_t ret;
-    uint32_t tmp;
+    uint16_t rawT;
+    uint16_t rawRH;
     uint16_t limitVal = 0U;
 
-    /* convert inputs to alert threshold word */
-    tmp = humidity * 65535U;
-    tmp = tmp / 1000U; /*humidity was provided in 10%RH*/
-    limitVal = ((uint16_t)tmp & SHT3X_HUMIDITY_LIMIT_MSK);
+    temperature_to_tick(temperature, &rawT);
+    humidity_to_tick(humidity, &rawRH);
 
-    tmp = (uint32_t)(temperature + 450);
-    tmp = tmp * 65535U;
-    tmp = tmp / 1750U;
-    tmp = (tmp >> 7);
-    limitVal |= ((uint16_t)tmp & SHT3X_TEMPERATURE_LIMIT_MSK);
+    /* convert inputs to alert threshold word */
+    limitVal = (rawRH & SHT3X_HUMIDITY_LIMIT_MSK);
+    limitVal |= ((rawT >> 7) & SHT3X_TEMPERATURE_LIMIT_MSK);
 
     switch (thd) {
         case SHT3X_HIALRT_SET:
@@ -215,11 +211,12 @@ int16_t sht3x_set_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
 }
 
 int16_t sht3x_get_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
-                            uint16_t* humidity, int16_t* temperature) {
+                            int32_t* humidity, int32_t* temperature) {
 
     int16_t ret;
     uint16_t word;
-    int32_t tmp;
+    uint16_t rawT;
+    uint16_t rawRH;
 
     switch (thd) {
         case SHT3X_HIALRT_SET:
@@ -248,15 +245,27 @@ int16_t sht3x_get_alert_thd(sht3x_i2c_addr_t addr, sht3x_alert_thd_t thd,
     }
 
     /* convert threshold word to alert settings in 10*%RH & 10*°C */
-    tmp = (int32_t)(word & SHT3X_HUMIDITY_LIMIT_MSK); /*only 7MSbits*/
-    tmp = (1000 * tmp) / 65535;
-    *humidity = tmp;
+    rawRH = (word & SHT3X_HUMIDITY_LIMIT_MSK);
+    rawT = ((word & SHT3X_TEMPERATURE_LIMIT_MSK) << 7);
 
-    tmp = (int32_t)(word & SHT3X_TEMPERATURE_LIMIT_MSK); /*only 9LSbits*/
-    tmp = (tmp << 7);
-    tmp = (tmp * 1750) / 65535;
-    tmp = tmp - 450;
-    *temperature = (int16_t)tmp;
+    tick_to_humidity(rawRH, humidity);
+    tick_to_temperature(rawT, temperature);
 
     return ret;
+}
+
+void tick_to_temperature(uint16_t tick, int32_t* temperature) {
+    *temperature = ((21875 * (int32_t)tick) >> 13) - 45000;
+}
+
+void tick_to_humidity(uint16_t tick, int32_t* humidity) {
+    *humidity = ((12500 * (int32_t)tick) >> 13);
+}
+
+void temperature_to_tick(int32_t temperature, uint16_t* tick) {
+    *tick = (uint16_t)((temperature * 12271 + 552195000) >> 15);
+}
+
+void humidity_to_tick(int32_t humidity, uint16_t* tick) {
+    *tick = (uint16_t)((humidity * 21474) >> 15);
 }
