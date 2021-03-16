@@ -5,10 +5,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
- * [`changed`] SHT3x driver added macros to easily parse the STATUS register relevant bits
- * [`changed`] SHT3x driver support for alert thresholds configuration (read and write commands)
- * [`changed`] SHT3x driver support for clear status register
- * [`changed`] SHT3x driver allows use of 2 sensors in parallel (addresses 0x44 & 0x45)
+
+## [5.3.0] - 2021-03-16
+
+ * [`added`] SHT3x driver added macros to easily parse the STATUS register relevant bits
+ * [`added`] SHT3x driver support for alert thresholds configuration (read and write commands)
+ * [`added`] SHT3x driver support for clear status register
+ * [`added`] SHT3x driver allows use of 2 sensors in parallel (addresses 0x44 & 0x45)
 
 ## [5.2.1] - 2020-12-14
 
@@ -84,7 +87,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * First public release
 
-[Unreleased]: https://github.com/Sensirion/embedded-sht/compare/5.2.1...master
+[Unreleased]: https://github.com/Sensirion/embedded-sht/compare/5.3.0...master
+[5.3.0]: https://github.com/Sensirion/embedded-sht/compare/5.2.1...5.3.0
 [5.2.1]: https://github.com/Sensirion/embedded-sht/compare/5.2.0...5.2.1
 [5.2.0]: https://github.com/Sensirion/embedded-sht/compare/5.1.0...5.2.0
 [5.1.0]: https://github.com/Sensirion/embedded-sht/compare/5.0.0...5.1.0
