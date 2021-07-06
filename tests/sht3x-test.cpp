@@ -56,8 +56,8 @@ static void test_teardown() {
 TEST_GROUP (SHT31_Tests) {
     void setup() {
         sensirion_i2c_init();
-        int16_t ret = sensirion_i2c_mux_set_single_channel(0x72, 0);
-        CHECK_ZERO_TEXT(ret, "sensirion_i2c_mux_select_TEXT(0x72, 0)");
+        int16_t ret = sensirion_i2c_mux_set_single_channel(0x72, 1);
+        CHECK_ZERO_TEXT(ret, "sensirion_i2c_mux_select_TEXT(0x72, 1)");
     }
 
     void teardown() {
