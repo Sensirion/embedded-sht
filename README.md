@@ -22,6 +22,8 @@ cloning the repository.
 * `shtc1` SHTC3/SHTC1/SHTW1/SHTW2 driver
 * `utils` Conversion functions (Centigrade to Fahrenheit, %RH relative humidity
           to aboslute humidity)
+  
+For <code><a href="https://github.com/Sensirion/embedded-i2c-sht3x">sht3x</a></code> and <code><a href="https://github.com/Sensirion/embedded-i2c-sht4x">sht4x</a></code> there are also updated drivers available in separate repositories.
 
 ## Collecting resources
 ```
